@@ -100,16 +100,18 @@ final class Browser extends AbstractController
 	 * 
 	 * @return string
 	 */
-	public function saveAction()
+    public function saveAction()
 	{
-		if ($this->request->hasPost('default', 'seo')) {
+        if ($this->request->hasPost('seo')) {
 
-			// Grab request data
-			$default = $this->request->getPost('default');
-			$seo = $this->request->getPost('seo');
+            $seo = $this->request->getPost('seo');
 
-			if ($this->getPageManager()->makeDefault($default) && $this->getPageManager()->updateSeo($seo)) {
+            if ($this->request->hasPost('default')) {
+                $default = $this->request->getPost('default');
+                $this->getPageManager()->makeDefault($default);
+            }
 
+			if ($this->getPageManager()->updateSeo($seo)) {
 				$this->flashBag->set('success', 'Settings have been saved successfully');
 				return '1';
 			}
