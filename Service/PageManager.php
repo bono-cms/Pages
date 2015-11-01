@@ -24,422 +24,422 @@ use Krystal\Db\Filter\FilterableServiceInterface;
 
 final class PageManager extends AbstractManager implements PageManagerInterface, FilterableServiceInterface, MenuAwareManager
 {
-	/**
-	 * Any compliant page mapper
-	 * 
-	 * @var \Pages\Storage\PageMapperInterface
-	 */
-	private $pageMapper;
+    /**
+     * Any compliant page mapper
+     * 
+     * @var \Pages\Storage\PageMapperInterface
+     */
+    private $pageMapper;
 
-	/**
-	 * A mapper which is responsible for handling default page ids with language associations
-	 * 
-	 * @var \Page\Storage\DefaultMapper
-	 */
-	private $defaultMapper;
+    /**
+     * A mapper which is responsible for handling default page ids with language associations
+     * 
+     * @var \Page\Storage\DefaultMapper
+     */
+    private $defaultMapper;
 
-	/**
-	 * Web page manager is responsible for managing slugs
-	 * 
-	 * @var \Cms\Service\WebPageManagerInterface
-	 */
-	private $webPageManager;
+    /**
+     * Web page manager is responsible for managing slugs
+     * 
+     * @var \Cms\Service\WebPageManagerInterface
+     */
+    private $webPageManager;
 
-	/**
-	 * History Manager to track activity
-	 * 
-	 * @var \Cms\Service\HistoryManagerInterface
-	 */
-	private $historyManager;
+    /**
+     * History Manager to track activity
+     * 
+     * @var \Cms\Service\HistoryManagerInterface
+     */
+    private $historyManager;
 
-	/**
-	 * State initialization
-	 * 
-	 * @param \Page\Storage\PageMapperInterface $pageMapper
-	 * @param \Page\Storage\DefaultMapper $defaultMapper
-	 * @param \Cms\Service\WebPageManagerInterface $webPageManager
-	 * @param \Cms\Service\HistoryManagerInterface $historyManager
-	 * @param \Menu\Service\MenuWidgetInterface $menuWidget Optional menu widget service
-	 * @return void
-	 */
-	public function __construct(
-		PageMapperInterface $pageMapper, 
-		DefaultMapperInterface $defaultMapper, 
-		WebPageManagerInterface $webPageManager, 
-		HistoryManagerInterface $historyManager,
-		MenuWidgetInterface $menuWidget = null
-	){
-		$this->pageMapper = $pageMapper;
-		$this->defaultMapper = $defaultMapper;
-		$this->webPageManager = $webPageManager;
-		$this->historyManager = $historyManager;
+    /**
+     * State initialization
+     * 
+     * @param \Page\Storage\PageMapperInterface $pageMapper
+     * @param \Page\Storage\DefaultMapper $defaultMapper
+     * @param \Cms\Service\WebPageManagerInterface $webPageManager
+     * @param \Cms\Service\HistoryManagerInterface $historyManager
+     * @param \Menu\Service\MenuWidgetInterface $menuWidget Optional menu widget service
+     * @return void
+     */
+    public function __construct(
+        PageMapperInterface $pageMapper, 
+        DefaultMapperInterface $defaultMapper, 
+        WebPageManagerInterface $webPageManager, 
+        HistoryManagerInterface $historyManager,
+        MenuWidgetInterface $menuWidget = null
+    ){
+        $this->pageMapper = $pageMapper;
+        $this->defaultMapper = $defaultMapper;
+        $this->webPageManager = $webPageManager;
+        $this->historyManager = $historyManager;
 
-		$this->setMenuWidget($menuWidget);
-	}
+        $this->setMenuWidget($menuWidget);
+    }
 
-	/**
-	 * Fetches web page id by associated page id
-	 * 
-	 * @param string $id Page id
-	 * @return string
-	 */
-	public function fetchWebPageIdById($id)
-	{
-		return $this->pageMapper->fetchWebPageIdById($id);
-	}
+    /**
+     * Fetches web page id by associated page id
+     * 
+     * @param string $id Page id
+     * @return string
+     */
+    public function fetchWebPageIdById($id)
+    {
+        return $this->pageMapper->fetchWebPageIdById($id);
+    }
 
-	/**
-	 * Filters the raw input
-	 * 
-	 * @param array|\ArrayAccess $input Raw input data
-	 * @param integer $page Current page number
-	 * @param integer $itemsPerPage Items per page to be displayed
-	 * @param string $sortingColumn Column name to be sorted
-	 * @param string $desc Whether to sort in DESC order
-	 * @return array
-	 */
-	public function filter($input, $page, $itemsPerPage, $sortingColumn, $desc)
-	{
-		return $this->prepareResults($this->pageMapper->filter($input, $page, $itemsPerPage, $sortingColumn, $desc));
-	}
+    /**
+     * Filters the raw input
+     * 
+     * @param array|\ArrayAccess $input Raw input data
+     * @param integer $page Current page number
+     * @param integer $itemsPerPage Items per page to be displayed
+     * @param string $sortingColumn Column name to be sorted
+     * @param string $desc Whether to sort in DESC order
+     * @return array
+     */
+    public function filter($input, $page, $itemsPerPage, $sortingColumn, $desc)
+    {
+        return $this->prepareResults($this->pageMapper->filter($input, $page, $itemsPerPage, $sortingColumn, $desc));
+    }
 
-	/**
-	 * Returns default web page id
-	 * 
-	 * @return integer
-	 */
-	public function getDefaultWebPageId()
-	{
-		$id = $this->defaultMapper->fetchDefaultId();
-		return (int) $this->pageMapper->fetchWebPageIdByPageId($id);
-	}
+    /**
+     * Returns default web page id
+     * 
+     * @return integer
+     */
+    public function getDefaultWebPageId()
+    {
+        $id = $this->defaultMapper->fetchDefaultId();
+        return (int) $this->pageMapper->fetchWebPageIdByPageId($id);
+    }
 
-	/**
-	 * Return breadcrumbs for a page bag
-	 * 
-	 * @param \Pages\Service\PageEntity $page
-	 * @return array
-	 */
-	public function getBreadcrumbs(PageEntity $page)
-	{
-		return array(
-			array(
-				'name' => $page->getTitle(),
-				'link' => '#'
-			)
-		);
-	}
+    /**
+     * Return breadcrumbs for a page bag
+     * 
+     * @param \Pages\Service\PageEntity $page
+     * @return array
+     */
+    public function getBreadcrumbs(PageEntity $page)
+    {
+        return array(
+            array(
+                'name' => $page->getTitle(),
+                'link' => '#'
+            )
+        );
+    }
 
-	/**
-	 * Fetches a title by web page id
-	 * 
-	 * @param integer $webPageId
-	 * @return string
-	 */
-	public function fetchTitleByWebPageId($webPageId)
-	{
-		return $this->pageMapper->fetchTitleByWebPageId($webPageId);
-	}
+    /**
+     * Fetches a title by web page id
+     * 
+     * @param integer $webPageId
+     * @return string
+     */
+    public function fetchTitleByWebPageId($webPageId)
+    {
+        return $this->pageMapper->fetchTitleByWebPageId($webPageId);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function toEntity(array $page)
-	{
-		// Fetch meta data
-		$meta = $this->webPageManager->fetchById((int) $page['web_page_id']);
+    /**
+     * {@inheritDoc}
+     */
+    protected function toEntity(array $page)
+    {
+        // Fetch meta data
+        $meta = $this->webPageManager->fetchById((int) $page['web_page_id']);
 
-		$entity = new PageEntity();
-		$entity->setId((int) $page['id'])
-				->setLangId((int) $page['lang_id'])
-				->setWebPageId((int) $page['web_page_id'])
-				->setTitle(Filter::escape($page['title']))
-				->setContent(Filter::escapeContent($page['content']))
-				->setSlug(Filter::escape($meta['slug']))
-				->setController($meta['controller'])
-				->setTemplate($page['template'])
-				->setProtected((bool) $page['protected'])
-				->setDefault((bool) $this->isDefault($page['id']))
-				->setSeo((bool) $page['seo'])
-				->setMetaDescription(Filter::escape($page['meta_description']))
-				->setUrl($this->webPageManager->surround($entity->getSlug(), $entity->getLangId()))
-				->setPermanentUrl('/module/pages/'.$entity->getId())
-				->setKeywords(Filter::escape($page['keywords']));
+        $entity = new PageEntity();
+        $entity->setId((int) $page['id'])
+                ->setLangId((int) $page['lang_id'])
+                ->setWebPageId((int) $page['web_page_id'])
+                ->setTitle(Filter::escape($page['title']))
+                ->setContent(Filter::escapeContent($page['content']))
+                ->setSlug(Filter::escape($meta['slug']))
+                ->setController($meta['controller'])
+                ->setTemplate($page['template'])
+                ->setProtected((bool) $page['protected'])
+                ->setDefault((bool) $this->isDefault($page['id']))
+                ->setSeo((bool) $page['seo'])
+                ->setMetaDescription(Filter::escape($page['meta_description']))
+                ->setUrl($this->webPageManager->surround($entity->getSlug(), $entity->getLangId()))
+                ->setPermanentUrl('/module/pages/'.$entity->getId())
+                ->setKeywords(Filter::escape($page['keywords']));
 
-		return $entity;
-	}
+        return $entity;
+    }
 
-	/**
-	 * Fetches entity of default page
-	 * 
-	 * @return \Krystal\Stdlib\VirtualEntity|boolean
-	 */
-	public function fetchDefault()
-	{
-		$id = $this->defaultMapper->fetchDefaultId();
+    /**
+     * Fetches entity of default page
+     * 
+     * @return \Krystal\Stdlib\VirtualEntity|boolean
+     */
+    public function fetchDefault()
+    {
+        $id = $this->defaultMapper->fetchDefaultId();
 
-		if ($id) {
-			return $this->fetchById($id);
-		} else {
-			return false;
-		}
-	}
+        if ($id) {
+            return $this->fetchById($id);
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * Updates page's SEO property by its associated id
-	 * 
-	 * @param array $pair
-	 * @return boolean
-	 */
-	public function updateSeo(array $pair)
-	{
-		foreach ($pair as $id => $seo) {
-			if (!$this->pageMapper->updateSeoById($id, $seo)) {
-				return false;
-			}
-		}
+    /**
+     * Updates page's SEO property by its associated id
+     * 
+     * @param array $pair
+     * @return boolean
+     */
+    public function updateSeo(array $pair)
+    {
+        foreach ($pair as $id => $seo) {
+            if (!$this->pageMapper->updateSeoById($id, $seo)) {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Tells whether page id default according to language id
-	 * 
-	 * @param string $id
-	 * @return boolean
-	 */
-	private function isDefault($id)
-	{
-		return $id == $this->defaultMapper->fetchDefaultId();
-	}
+    /**
+     * Tells whether page id default according to language id
+     * 
+     * @param string $id
+     * @return boolean
+     */
+    private function isDefault($id)
+    {
+        return $id == $this->defaultMapper->fetchDefaultId();
+    }
 
-	/**
-	 * Return default page ids
-	 * 
-	 * @return array
-	 */
-	private function getDefaults()
-	{
-		// To cache method calls
-		static $defaults = null;
+    /**
+     * Return default page ids
+     * 
+     * @return array
+     */
+    private function getDefaults()
+    {
+        // To cache method calls
+        static $defaults = null;
 
-		if (is_null($defaults)) {
-			$defaults = $this->defaultMapper->fetchAll();
-		}
+        if (is_null($defaults)) {
+            $defaults = $this->defaultMapper->fetchAll();
+        }
 
-		return $defaults;
-	}
+        return $defaults;
+    }
 
-	/**
-	 * Makes a page id default one
-	 * 
-	 * @param string $id Some exiting page id
-	 * @return boolean
-	 */
-	public function makeDefault($id)
-	{
-		if ($this->defaultMapper->exists()) {
-			return $this->defaultMapper->update($id);
-		} else {
-			return $this->defaultMapper->insert($id);
-		}
-	}
+    /**
+     * Makes a page id default one
+     * 
+     * @param string $id Some exiting page id
+     * @return boolean
+     */
+    public function makeDefault($id)
+    {
+        if ($this->defaultMapper->exists()) {
+            return $this->defaultMapper->update($id);
+        } else {
+            return $this->defaultMapper->insert($id);
+        }
+    }
 
-	/**
-	 * Fetches all page entities filtered by pagination
-	 * 
-	 * @param string $page Current page
-	 * @param string $itemsPerPage Items per page count
-	 * @return array
-	 */
-	public function fetchAllByPage($page, $itemsPerPage)
-	{
-		return $this->prepareResults($this->pageMapper->fetchAllByPage($page, $itemsPerPage));
-	}
+    /**
+     * Fetches all page entities filtered by pagination
+     * 
+     * @param string $page Current page
+     * @param string $itemsPerPage Items per page count
+     * @return array
+     */
+    public function fetchAllByPage($page, $itemsPerPage)
+    {
+        return $this->prepareResults($this->pageMapper->fetchAllByPage($page, $itemsPerPage));
+    }
 
-	/**
-	 * Returns prepared paginator instance
-	 * 
-	 * @return \Krystal\Paginate\Paginator
-	 */
-	public function getPaginator()
-	{
-		return $this->pageMapper->getPaginator();
-	}
+    /**
+     * Returns prepared paginator instance
+     * 
+     * @return \Krystal\Paginate\Paginator
+     */
+    public function getPaginator()
+    {
+        return $this->pageMapper->getPaginator();
+    }
 
-	/**
-	 * Returns last page id
-	 * 
-	 * @return integer
-	 */
-	public function getLastId()
-	{
-		return $this->pageMapper->getLastId();
-	}
+    /**
+     * Returns last page id
+     * 
+     * @return integer
+     */
+    public function getLastId()
+    {
+        return $this->pageMapper->getLastId();
+    }
 
-	/**
-	 * Prepares data container before sending to the mapper
-	 * 
-	 * @param array $input Raw input data
-	 * @return array
-	 */
-	private function prepareInput(array $input)
-	{
-		$page =& $input['page'];
+    /**
+     * Prepares data container before sending to the mapper
+     * 
+     * @param array $input Raw input data
+     * @return array
+     */
+    private function prepareInput(array $input)
+    {
+        $page =& $input['page'];
 
-		if (empty($page['slug'])) {
-			$page['slug'] = $page['title'];
-		}
+        if (empty($page['slug'])) {
+            $page['slug'] = $page['title'];
+        }
 
-		// Make it look like a a slug now
-		$page['slug'] = $this->webPageManager->sluggify($page['slug']);
+        // Make it look like a a slug now
+        $page['slug'] = $this->webPageManager->sluggify($page['slug']);
 
-		// Ensure the title is secure
-		$page['title'] = Filter::escape($page['title']);
+        // Ensure the title is secure
+        $page['title'] = Filter::escape($page['title']);
 
-		return $input;
-	}
+        return $input;
+    }
 
-	/**
-	 * Adds a page
-	 * 
-	 * @param array $input Raw input data
-	 * @return boolean
-	 */
-	public function add(array $input)
-	{
-		$input = $this->prepareInput($input);
-		$page =& $input['page'];
-		$page['web_page_id'] = '';
+    /**
+     * Adds a page
+     * 
+     * @param array $input Raw input data
+     * @return boolean
+     */
+    public function add(array $input)
+    {
+        $input = $this->prepareInput($input);
+        $page =& $input['page'];
+        $page['web_page_id'] = '';
 
-		if (!$this->pageMapper->insert(ArrayUtils::arrayWithout($page, array('controller', 'makeDefault', 'slug', 'menu')))) {
-			return false;
-		} else {
-			// It was inserted successfully
-			$id = $this->getLastId();
+        if (!$this->pageMapper->insert(ArrayUtils::arrayWithout($page, array('controller', 'makeDefault', 'slug', 'menu')))) {
+            return false;
+        } else {
+            // It was inserted successfully
+            $id = $this->getLastId();
 
-			// If checkbox was checked
-			if (isset($page['makeDefault']) && $page['makeDefault'] == '1') {
-				$this->makeDefault($id);
-			}
+            // If checkbox was checked
+            if (isset($page['makeDefault']) && $page['makeDefault'] == '1') {
+                $this->makeDefault($id);
+            }
 
-			// Use custom controller if provided by user
-			$controller = isset($page['controller']) ? $page['controller'] : 'Pages:Page@indexAction';
+            // Use custom controller if provided by user
+            $controller = isset($page['controller']) ? $page['controller'] : 'Pages:Page@indexAction';
 
-			// Add a web page now
-			if ($this->webPageManager->add($id, $page['slug'], 'Pages', $controller, $this->pageMapper)) {
-				// Do the work in case menu widget was injected
-				if ($this->hasMenuWidget()) {
-					$this->addMenuItem($this->webPageManager->getLastId(), $page['title'], $input);
-				}
-			}
+            // Add a web page now
+            if ($this->webPageManager->add($id, $page['slug'], 'Pages', $controller, $this->pageMapper)) {
+                // Do the work in case menu widget was injected
+                if ($this->hasMenuWidget()) {
+                    $this->addMenuItem($this->webPageManager->getLastId(), $page['title'], $input);
+                }
+            }
 
-			// Track it
-			$this->track('A new "%s" page has been created', $page['title']);
-			return true;
-		}
-	}
+            // Track it
+            $this->track('A new "%s" page has been created', $page['title']);
+            return true;
+        }
+    }
 
-	/**
-	 * Updates a page
-	 * 
-	 * @param array $input Raw input data
-	 * @return boolean
-	 */
-	public function update(array $input)
-	{
-		$input = $this->prepareInput($input);
-		$page =& $input['page'];
+    /**
+     * Updates a page
+     * 
+     * @param array $input Raw input data
+     * @return boolean
+     */
+    public function update(array $input)
+    {
+        $input = $this->prepareInput($input);
+        $page =& $input['page'];
 
-		$this->webPageManager->update($page['web_page_id'], $page['slug'], $page['controller']);
+        $this->webPageManager->update($page['web_page_id'], $page['slug'], $page['controller']);
 
-		if ($this->hasMenuWidget() && isset($input['menu'])) {
-			$this->updateMenuItem($page['web_page_id'], $page['title'], $input['menu']);
-		}
+        if ($this->hasMenuWidget() && isset($input['menu'])) {
+            $this->updateMenuItem($page['web_page_id'], $page['title'], $input['menu']);
+        }
 
-		$this->track('The page "%s" has been updated', $page['title']);
+        $this->track('The page "%s" has been updated', $page['title']);
 
-		return $this->pageMapper->update(ArrayUtils::arrayWithout($page, array('controller', 'makeDefault', 'slug', 'menu')));
-	}
+        return $this->pageMapper->update(ArrayUtils::arrayWithout($page, array('controller', 'makeDefault', 'slug', 'menu')));
+    }
 
-	/**
-	 * Deletes a page by its associated id
-	 * 
-	 * @param string $id
-	 * @return boolean
-	 */
-	private function delete($id)
-	{
-		$webPageId = $this->pageMapper->fetchWebPageIdById($id);
-		
-		// @TODO: Should be removed only if no parents
-		// When has parents, then replace slug to #
-		$this->menuWidget->deleteAllByWebPageId($webPageId);
-		
-		$this->webPageManager->deleteById($webPageId);
-		$this->pageMapper->deleteById($id);
-		
-		return true;
-	}
+    /**
+     * Deletes a page by its associated id
+     * 
+     * @param string $id
+     * @return boolean
+     */
+    private function delete($id)
+    {
+        $webPageId = $this->pageMapper->fetchWebPageIdById($id);
+        
+        // @TODO: Should be removed only if no parents
+        // When has parents, then replace slug to #
+        $this->menuWidget->deleteAllByWebPageId($webPageId);
+        
+        $this->webPageManager->deleteById($webPageId);
+        $this->pageMapper->deleteById($id);
+        
+        return true;
+    }
 
-	/**
-	 * Deletes a page by its associated id
-	 * 
-	 * @param string $id Page's id
-	 * @return boolean
-	 */
-	public function deleteById($id)
-	{
-		// Gotta grab page's title, before removing it
-		$title = Filter::escape($this->pageMapper->fetchTitleById($id));
+    /**
+     * Deletes a page by its associated id
+     * 
+     * @param string $id Page's id
+     * @return boolean
+     */
+    public function deleteById($id)
+    {
+        // Gotta grab page's title, before removing it
+        $title = Filter::escape($this->pageMapper->fetchTitleById($id));
 
-		if ($this->delete($id)) {
-			$this->track('The page "%s" has been removed', $title);
-			return true;
+        if ($this->delete($id)) {
+            $this->track('The page "%s" has been removed', $title);
+            return true;
 
-		} else {
-			return false;
-		}
-	}
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * Delete pages by their associated ids
-	 * 
-	 * @param array $ids
-	 * @return boolean
-	 */
-	public function deleteByIds(array $ids)
-	{
-		foreach ($ids as $id) {
-			if (!$this->delete($id)) {
-				return false;
-			}
-		}
+    /**
+     * Delete pages by their associated ids
+     * 
+     * @param array $ids
+     * @return boolean
+     */
+    public function deleteByIds(array $ids)
+    {
+        foreach ($ids as $id) {
+            if (!$this->delete($id)) {
+                return false;
+            }
+        }
 
-		$this->track('%s pages have been removed', count($ids));
-		return true;
-	}
+        $this->track('%s pages have been removed', count($ids));
+        return true;
+    }
 
-	/**
-	 * Fetches a record by its associated id
-	 * 
-	 * @param string $id
-	 * @return \Krystal\Stdlib\VirtualEntity
-	 */
-	public function fetchById($id)
-	{
-		return $this->prepareResult($this->pageMapper->fetchById($id));
-	}
+    /**
+     * Fetches a record by its associated id
+     * 
+     * @param string $id
+     * @return \Krystal\Stdlib\VirtualEntity
+     */
+    public function fetchById($id)
+    {
+        return $this->prepareResult($this->pageMapper->fetchById($id));
+    }
 
-	/**
-	 * Tracks activity
-	 * 
-	 * @param string $message
-	 * @param string $placeholder
-	 * @return boolean
-	 */
-	private function track($message, $placeholder = '')
-	{
-		return $this->historyManager->write('Pages', $message, $placeholder);
-	}
+    /**
+     * Tracks activity
+     * 
+     * @param string $message
+     * @param string $placeholder
+     * @return boolean
+     */
+    private function track($message, $placeholder = '')
+    {
+        return $this->historyManager->write('Pages', $message, $placeholder);
+    }
 }

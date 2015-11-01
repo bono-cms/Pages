@@ -13,10 +13,10 @@ namespace Pages\Service;
 
 interface ControllerProviderInterface
 {
-	/**
-	 * Returns a filtered array of controllers
-	 * 
-	 * @return array
-	 */
-	public function getControllers();
+    /**
+     * Returns a filtered array of controllers
+     * 
+     * @return array
+     */
+    public function getControllers();
 }

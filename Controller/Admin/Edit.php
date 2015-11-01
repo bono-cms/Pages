@@ -13,47 +13,47 @@ namespace Pages\Controller\Admin;
 
 final class Edit extends AbstractPage
 {
-	/**
-	 * Shows edit form
-	 * 
-	 * @param string $id Page's id
-	 * @return string
-	 */
-	public function indexAction($id)
-	{
-		$page = $this->getPageManager()->fetchById($id);
+    /**
+     * Shows edit form
+     * 
+     * @param string $id Page's id
+     * @return string
+     */
+    public function indexAction($id)
+    {
+        $page = $this->getPageManager()->fetchById($id);
 
-		if ($page !== false) {
-			$this->loadSharedPlugins();
+        if ($page !== false) {
+            $this->loadSharedPlugins();
 
-			return $this->view->render($this->getTemplatePath(), $this->getWithSharedVars(array(
-				'page' => $page,
-				'title' => 'Edit the page',
-			)));
+            return $this->view->render($this->getTemplatePath(), $this->getWithSharedVars(array(
+                'page' => $page,
+                'title' => 'Edit the page',
+            )));
 
-		} else {
-			return false;
-		}
-	}
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * Updates a page
-	 * 
-	 * @return string
-	 */
-	public function updateAction()
-	{
-		$formValidator = $this->getValidator($this->request->getPost('page'));
+    /**
+     * Updates a page
+     * 
+     * @return string
+     */
+    public function updateAction()
+    {
+        $formValidator = $this->getValidator($this->request->getPost('page'));
 
-		if ($formValidator->isValid()) {
-			if ($this->getPageManager()->update($this->request->getPost())) {
+        if ($formValidator->isValid()) {
+            if ($this->getPageManager()->update($this->request->getPost())) {
 
-				$this->flashBag->set('success', 'The page has been updated successfully');
-				return '1';
-			}
+                $this->flashBag->set('success', 'The page has been updated successfully');
+                return '1';
+            }
 
-		} else {
-			return $formValidator->getErrors();
-		}
-	}
+        } else {
+            return $formValidator->getErrors();
+        }
+    }
 }

@@ -16,16 +16,16 @@ use Pages\Service\PageManager;
 
 final class Module extends AbstractCmsModule
 {
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getServiceProviders()
-	{
-		$pageMapper = $this->getMapper('/Pages/Storage/MySQL/PageMapper');
-		$defaultMapper = $this->getMapper('/Pages/Storage/MySQL/DefaultMapper');
+    /**
+     * {@inheritDoc}
+     */
+    public function getServiceProviders()
+    {
+        $pageMapper = $this->getMapper('/Pages/Storage/MySQL/PageMapper');
+        $defaultMapper = $this->getMapper('/Pages/Storage/MySQL/DefaultMapper');
 
-		return array(
-			'pageManager' => new PageManager($pageMapper, $defaultMapper, $this->getWebPageManager(), $this->getHistoryManager(), $this->getMenuWidget())
-		);
-	}
+        return array(
+            'pageManager' => new PageManager($pageMapper, $defaultMapper, $this->getWebPageManager(), $this->getHistoryManager(), $this->getMenuWidget())
+        );
+    }
 }

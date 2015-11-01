@@ -15,13 +15,13 @@ use Krystal\Stdlib\VirtualEntity;
 
 final class PageEntity extends VirtualEntity
 {
-	/**
-	 * The alias to getDefault() 
-	 * 
-	 * @return boolean
-	 */
-	public function isDefault()
-	{
-		return $this->getDefault();
-	}
+    /**
+     * The alias to getDefault() 
+     * 
+     * @return boolean
+     */
+    public function isDefault()
+    {
+        return $this->getDefault();
+    }
 }

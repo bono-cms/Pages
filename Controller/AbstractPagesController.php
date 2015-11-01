@@ -15,23 +15,23 @@ use Site\Controller\AbstractController;
 
 abstract class AbstractPagesController extends AbstractController
 {
-	/**
-	 * Returns configuration entity
-	 * 
-	 * @return \Krystal\Stdlib\VirtualEntity
-	 */
-	final protected function getConfig()
-	{
-		return $this->getModuleService('configManager')->getEntity();
-	}
+    /**
+     * Returns configuration entity
+     * 
+     * @return \Krystal\Stdlib\VirtualEntity
+     */
+    final protected function getConfig()
+    {
+        return $this->getModuleService('configManager')->getEntity();
+    }
 
-	/**
-	 * Returns page manager
-	 * 
-	 * @return \Pages\Service\PageManager
-	 */
-	final protected function getPageManager()
-	{
-		return $this->getModuleService('pageManager');
-	}
+    /**
+     * Returns page manager
+     * 
+     * @return \Pages\Service\PageManager
+     */
+    final protected function getPageManager()
+    {
+        return $this->getModuleService('pageManager');
+    }
 }
