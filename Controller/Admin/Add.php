@@ -23,15 +23,17 @@ final class Add extends AbstractPage
     public function indexAction()
     {
         $this->loadSharedPlugins();
+        $this->loadBreadcrumbs('Add a page');
 
         $page = new VirtualEntity();
         $page->setSeo(true)
              ->setController('Pages:Page@indexAction');
 
-        return $this->view->render($this->getTemplatePath(), $this->getWithSharedVars(array(
+        return $this->view->render($this->getTemplatePath(), array(
+            'controllers' => $this->getControllers(),
             'title' => 'Add a page',
             'page' => $page
-        )));
+        ));
     }
 
     /**
@@ -47,7 +49,6 @@ final class Add extends AbstractPage
             $pageManager = $this->getPageManager();
 
             if ($pageManager->add($this->request->getPost())) {
-
                 $this->flashBag->set('success', 'A page has been created successfully');
                 return $pageManager->getLastId();
             }

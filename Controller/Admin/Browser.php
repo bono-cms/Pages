@@ -29,11 +29,8 @@ final class Browser extends AbstractController
 
         if ($records !== false) {
             $this->loadPlugins();
-
             return $this->view->render($this->getGridTemplate(), $this->getWithSharedVars($records));
-
         } else {
-
             // None selected, so no need to apply a filter
             return $this->indexAction();
         }
@@ -51,7 +48,6 @@ final class Browser extends AbstractController
 
         $pageManager = $this->getPageManager();;
 
-        // Alter paginator's state
         $paginator = $pageManager->getPaginator();
         $paginator->setUrl('/admin/module/pages/browse/(:var)');
 
@@ -83,7 +79,6 @@ final class Browser extends AbstractController
     public function deleteSelectedAction()
     {
         if ($this->request->hasPost('toDelete')) {
-
             $ids = array_keys($this->request->getPost('toDelete'));
             $this->getPageManager()->deleteByIds($ids);
 
@@ -103,7 +98,6 @@ final class Browser extends AbstractController
     public function saveAction()
     {
         if ($this->request->hasPost('seo')) {
-
             $seo = $this->request->getPost('seo');
 
             if ($this->request->hasPost('default')) {
@@ -136,14 +130,9 @@ final class Browser extends AbstractController
     private function loadPlugins()
     {
         $this->view->getPluginBag()
-                   ->appendScript($this->getWithAssetPath('/admin/page.browser.js'));
+                   ->appendScript('@Pages/admin/page.browser.js');
 
-        $this->view->getBreadcrumbBag()->add(array(
-            array(
-                'link' => '#',
-                'name' => 'Pages'
-            )
-        ));
+        $this->view->getBreadcrumbBag()->addOne('Pages');
     }
 
     /**

@@ -56,12 +56,7 @@ final class Page extends AbstractPagesController
     public function notFoundAction()
     {
         $this->loadSitePlugins();
-        $this->view->getBreadcrumbBag()->add(array(
-            array(
-                'name' => '404',
-                'link' => '#'
-            )
-        ));
+        $this->view->getBreadcrumbBag()->addOne('404');
 
         $page = new VirtualEntity();
         $page->setTitle($this->translator->translate('Page not found'))
@@ -202,14 +197,12 @@ final class Page extends AbstractPagesController
      */
     private function loadBreadcrumbsByPageEntity(VirtualEntity $page)
     {
-        $breadcrumbBag = $this->view->getBreadcrumbBag();
-
         // If page isn't default, then we append a breadcrumb
         if (!$page->getDefault()) {
-            $breadcrumbBag->add($this->getPageManager()->getBreadcrumbs($page));
+            $this->view->getBreadcrumbBag()->addOne($page->getTitle());
         } else {
             // Otherwise we should never have breadcrumbs
-            $breadcrumbBag->clear();
+            $this->view->getBreadcrumbBag()->clear();
         }
     }
 }

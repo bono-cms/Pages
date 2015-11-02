@@ -22,7 +22,7 @@ abstract class AbstractPage extends AbstractController
      * 
      * @return array
      */
-    private function getControllers()
+    final protected function getControllers()
     {
         $provider = new ControllerProvider($this->moduleManager->getRoutes());
         return $provider->getControllers();
@@ -47,26 +47,15 @@ abstract class AbstractPage extends AbstractController
     }
 
     /**
-     * Returns shared variables for Edit and Add controllers
+     * Loads breadcrumbs
      * 
-     * @param array $overrides
-     * @return array
+     * @param string $title
+     * @return void
      */
-    final protected function getWithSharedVars(array $overrides)
+    final protected function loadBreadcrumbs($title)
     {
-        $this->view->getBreadcrumbBag()->add(array(
-            array(
-                'link' => 'Pages:Admin:Browser@indexAction',
-                'name' => 'Pages'
-            ),
-
-            array(
-                'link' => '#',
-                'name' => $overrides['title']
-            )
-        ));
-
-        return array_replace_recursive(array('controllers' => $this->getControllers()), $overrides);
+        $this->view->getBreadcrumbBag()->addOne('Pages', 'Pages:Admin:Browser@indexAction')
+                                       ->addOne($title);
     }
 
     /**
@@ -78,7 +67,7 @@ abstract class AbstractPage extends AbstractController
     {
         $this->loadMenuWidget();
         $this->view->getPluginBag()->load($this->getWysiwygPluginName())
-                                   ->appendScript($this->getWithAssetPath('/admin/page.form.js'));
+                                   ->appendScript('@Pages/admin/page.form.js');
     }
 
     /**

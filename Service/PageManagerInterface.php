@@ -15,14 +15,6 @@ namespace Pages\Service;
 interface PageManagerInterface
 {
     /**
-     * Return breadcrumbs for a page entity
-     * 
-     * @param \Pages\Service\PageEntity $page
-     * @return array
-     */
-    public function getBreadcrumbs(PageEntity $page);
-
-    /**
      * Fetches default page bag
      * 
      * @return object|boolean

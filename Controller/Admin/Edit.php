@@ -16,7 +16,7 @@ final class Edit extends AbstractPage
     /**
      * Shows edit form
      * 
-     * @param string $id Page's id
+     * @param string $id
      * @return string
      */
     public function indexAction($id)
@@ -25,11 +25,13 @@ final class Edit extends AbstractPage
 
         if ($page !== false) {
             $this->loadSharedPlugins();
+            $this->loadBreadcrumbs('Edit the page');
 
-            return $this->view->render($this->getTemplatePath(), $this->getWithSharedVars(array(
+            return $this->view->render($this->getTemplatePath(), array(
+                'controllers' => $this->getControllers(),
                 'page' => $page,
-                'title' => 'Edit the page',
-            )));
+                'title' => 'Edit the page'
+            ));
 
         } else {
             return false;
@@ -47,7 +49,6 @@ final class Edit extends AbstractPage
 
         if ($formValidator->isValid()) {
             if ($this->getPageManager()->update($this->request->getPost())) {
-
                 $this->flashBag->set('success', 'The page has been updated successfully');
                 return '1';
             }

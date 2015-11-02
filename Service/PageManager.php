@@ -115,22 +115,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     }
 
     /**
-     * Return breadcrumbs for a page bag
-     * 
-     * @param \Pages\Service\PageEntity $page
-     * @return array
-     */
-    public function getBreadcrumbs(PageEntity $page)
-    {
-        return array(
-            array(
-                'name' => $page->getTitle(),
-                'link' => '#'
-            )
-        );
-    }
-
-    /**
      * Fetches a title by web page id
      * 
      * @param integer $webPageId
