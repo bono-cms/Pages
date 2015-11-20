@@ -355,14 +355,11 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     private function delete($id)
     {
         $webPageId = $this->pageMapper->fetchWebPageIdById($id);
-        
-        // @TODO: Should be removed only if no parents
-        // When has parents, then replace slug to #
+
         $this->menuWidget->deleteAllByWebPageId($webPageId);
-        
         $this->webPageManager->deleteById($webPageId);
         $this->pageMapper->deleteById($id);
-        
+
         return true;
     }
 
