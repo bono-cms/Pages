@@ -19,100 +19,6 @@ final class Browser extends AbstractController
     const FILTER_ROUTE = '/admin/module/pages/filter/';
 
     /**
-     * Applies a filter
-     * 
-     * @return string
-     */
-    public function filterAction()
-    {
-        $records = $this->getFilter($this->getPageManager(), self::FILTER_ROUTE);
-
-        if ($records !== false) {
-            $this->loadPlugins();
-            return $this->view->render($this->getGridTemplate(), $this->getWithSharedVars($records));
-        } else {
-            // None selected, so no need to apply a filter
-            return $this->indexAction();
-        }
-    }
-
-    /**
-     * Shows a grid
-     * 
-     * @param string $page Current page
-     * @return string
-     */
-    public function indexAction($page = 1)
-    {
-        $this->loadPlugins();
-
-        $pageManager = $this->getPageManager();;
-
-        $paginator = $pageManager->getPaginator();
-        $paginator->setUrl('/admin/module/pages/browse/(:var)');
-
-        return $this->view->render($this->getGridTemplate(), $this->getWithSharedVars($pageManager->fetchAllByPage($page, $this->getSharedPerPageCount())));
-    }
-
-    /**
-     * Deletes selected page by its associated id
-     * 
-     * @return string
-     */
-    public function deleteAction()
-    {
-        if ($this->request->hasPost('id')) {
-            $id = $this->request->getPost('id');
-
-            $this->getPageManager()->deleteById($id);
-            $this->flashBag->set('success', 'Selected page has been removed successfully');
-        }
-
-        return '1';
-    }
-
-    /**
-     * Delete selected pages
-     * 
-     * @return string
-     */
-    public function deleteSelectedAction()
-    {
-        if ($this->request->hasPost('toDelete')) {
-            $ids = array_keys($this->request->getPost('toDelete'));
-            $this->getPageManager()->deleteByIds($ids);
-
-            $this->flashBag->set('success', 'Selected pages have been removed successfully');
-        } else {
-            $this->flashBag->set('warning', 'You have not checked any page you want to remove');
-        }
-
-        return '1';
-    }
-
-    /**
-     * Saves options
-     * 
-     * @return string
-     */
-    public function saveAction()
-    {
-        if ($this->request->hasPost('seo')) {
-            $seo = $this->request->getPost('seo');
-
-            if ($this->request->hasPost('default')) {
-                $default = $this->request->getPost('default');
-                $this->getPageManager()->makeDefault($default);
-            }
-
-            if ($this->getPageManager()->updateSeo($seo)) {
-                $this->flashBag->set('success', 'Settings have been saved successfully');
-                return '1';
-            }
-        }
-    }
-
-    /**
      * Returns page manager
      * 
      * @return \Pages\Service\PageManager
@@ -123,41 +29,60 @@ final class Browser extends AbstractController
     }
 
     /**
-     * Loads required plugins for view
+     * Creates grid template
      * 
-     * @return void
+     * @param array $pages A collection of page entities
+     * @param string $url
+     * @return string
      */
-    private function loadPlugins()
+    private function createGrid(array $pages, $url = null)
     {
+        // Load view plugins
         $this->view->getPluginBag()
                    ->appendScript('@Pages/admin/page.browser.js');
 
-        $this->view->getBreadcrumbBag()->addOne('Pages');
+        // Append a breadcrumb
+        $this->view->getBreadcrumbBag()
+                   ->addOne('Pages');
+
+        $paginator = $this->getPageManager()->getPaginator();
+
+        if ($url !== null) {
+            $paginator->setUrl($url);
+        }
+
+        return $this->view->render('browser', array(
+            'paginator' => $paginator,
+            'pages' => $pages,
+            'filter' => new QueryContainer($this->request->getQuery(), self::FILTER_ROUTE),
+        ));
     }
 
     /**
-     * Returns shared grid's path
+     * Applies a filter
      * 
      * @return string
      */
-    private function getGridTemplate()
+    public function filterAction()
     {
-        return 'browser';
+        $records = $this->getFilter($this->getPageManager(), self::FILTER_ROUTE);
+
+        if ($records !== false) {
+            return $this->createGrid($records);
+        } else {
+            return $this->indexAction();
+        }
     }
 
     /**
-     * Returns an array with shared variables for filter and index actions
+     * Renders a grid
      * 
-     * @param array $pages
-     * @return array
+     * @param string $page Current page
+     * @return string
      */
-    private function getWithSharedVars(array $pages)
+    public function indexAction($page = 1)
     {
-        return array(
-            'paginator' => $this->getPageManager()->getPaginator(),
-            'pages' => $pages,
-            'filter' => new QueryContainer($this->request->getQuery(), self::FILTER_ROUTE),
-            'title' => 'Pages'
-        );
+        $pages = $this->getPageManager()->fetchAllByPage($page, $this->getSharedPerPageCount());
+        return $this->createGrid($pages, '/admin/module/pages/browse/(:var)');
     }
 }

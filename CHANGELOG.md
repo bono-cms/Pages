@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+1.4
+---
+
+ * Improved internal structure
+
 1.3
 ---
 

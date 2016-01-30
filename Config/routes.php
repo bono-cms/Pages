@@ -27,36 +27,26 @@ return array(
         'controller' => 'Admin:Browser@indexAction'
     ),
     
-    '/admin/module/pages/delete.ajax' => array(
-        'controller' => 'Admin:Browser@deleteAction',
+    '/admin/module/pages/delete' => array(
+        'controller' => 'Admin:Page@deleteAction',
         'disallow' => array('guest')
     ),
     
-    '/admin/module/pages/delete-selected.ajax' => array(
-        'controller' => 'Admin:Browser@deleteSelectedAction',
-        'disallow' => array('guest')
-    ),
-    
-    '/admin/module/pages/save.ajax' => array(
-        'controller' => 'Admin:Browser@saveAction',
+    '/admin/module/pages/tweak' => array(
+        'controller' => 'Admin:Page@tweakAction',
         'disallow' => array('guest')
     ),
     
     '/admin/module/pages/add' => array(
-        'controller' => 'Admin:Add@indexAction'
-    ),
-    
-    '/admin/module/pages/add.ajax' => array(
-        'controller' => 'Admin:Add@addAction',
-        'disallow' => array('guest')
+        'controller' => 'Admin:Page@addAction'
     ),
     
     '/admin/module/pages/edit/(:var)' => array(
-        'controller' => 'Admin:Edit@indexAction'
+        'controller' => 'Admin:Page@editAction'
     ),
     
-    '/admin/module/pages/edit.ajax' => array(
-        'controller' => 'Admin:Edit@updateAction',
+    '/admin/module/pages/save' => array(
+        'controller' => 'Admin:Page@saveAction',
         'disallow' => array('guest')
     )
 );

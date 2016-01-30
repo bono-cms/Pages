@@ -1,9 +1,8 @@
-
 $(function(){
 	$.delete({
 		categories : {
 			main : {
-				url : "/admin/module/pages/delete.ajax"
+				url : "/admin/module/pages/delete"
 			}
 		}
 	});
