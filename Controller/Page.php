@@ -56,7 +56,8 @@ final class Page extends AbstractPagesController
     public function notFoundAction()
     {
         $this->loadSitePlugins();
-        $this->view->getBreadcrumbBag()->addOne('404');
+        $this->view->getBreadcrumbBag()
+                   ->addOne('404');
 
         $page = new VirtualEntity();
         $page->setTitle($this->translator->translate('Page not found'))

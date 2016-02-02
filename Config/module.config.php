@@ -1,11 +1,10 @@
 <?php
 
 return array(
-    'template' => 'page',
     'module' => array(
         'name' => 'Pages',
         'url' => '/admin/module/pages',
-        'icon' => '/module/Pages/Assets/pages.png',
+        'icon' => 'fa fa-file-code-o fa-5x',
         'order' => 1,
         'description' => 'Pages module allows you to manage static pages on your site',
     )
