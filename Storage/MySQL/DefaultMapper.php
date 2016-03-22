@@ -21,7 +21,7 @@ final class DefaultMapper extends AbstractMapper implements DefaultMapperInterfa
      */
     public static function getTableName()
     {
-        return 'bono_module_pages_defaults';
+        return self::getWithPrefix('bono_module_pages_defaults');
     }
 
     /**

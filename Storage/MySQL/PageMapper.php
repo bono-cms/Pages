@@ -22,7 +22,7 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
      */
     public static function getTableName()
     {
-        return 'bono_module_pages';
+        return self::getWithPrefix('bono_module_pages');
     }
 
     /**
