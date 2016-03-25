@@ -97,7 +97,8 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
             $db->desc();
         }
 
-        return $db->paginate($page, $itemsPerPage)->queryAll();
+        return $db->paginate($page, $itemsPerPage)
+                  ->queryAll();
     }
 
     /**
