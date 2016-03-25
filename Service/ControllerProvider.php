@@ -65,7 +65,7 @@ final class ControllerProvider implements ControllerProviderInterface
     }
 
     /**
-     * Determines whether module
+     * Determines whether target controller must be excluded
      * 
      * @param string $controller Raw controller name
      * @return boolean
