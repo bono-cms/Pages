@@ -16,8 +16,6 @@ use Krystal\Db\Filter\QueryContainer;
 
 final class Browser extends AbstractController
 {
-    const FILTER_ROUTE = '/admin/module/pages/filter/';
-
     /**
      * Returns page manager
      * 
@@ -54,7 +52,7 @@ final class Browser extends AbstractController
         return $this->view->render('browser', array(
             'paginator' => $paginator,
             'pages' => $pages,
-            'filter' => new QueryContainer($this->request->getQuery(), self::FILTER_ROUTE),
+            'filter' => new QueryContainer($this->request->getQuery(), $this->createUrl('Pages:Admin:Browser@filterAction', array(null))),
         ));
     }
 
@@ -65,7 +63,7 @@ final class Browser extends AbstractController
      */
     public function filterAction()
     {
-        $records = $this->getFilter($this->getPageManager(), self::FILTER_ROUTE);
+        $records = $this->getFilter($this->getPageManager(), $this->createUrl('Pages:Admin:Browser@filterAction', array(null)));
 
         if ($records !== false) {
             return $this->createGrid($records);
@@ -83,6 +81,8 @@ final class Browser extends AbstractController
     public function indexAction($page = 1)
     {
         $pages = $this->getPageManager()->fetchAllByPage($page, $this->getSharedPerPageCount());
-        return $this->createGrid($pages, '/admin/module/pages/browse/(:var)');
+        $url = $this->createUrl('Pages:Admin:Browser@indexAction', array(), 1);
+
+        return $this->createGrid($pages, $url);
     }
 }
