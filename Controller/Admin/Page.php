@@ -88,11 +88,12 @@ final class Page extends AbstractController
     /**
      * Deletes selected page by its associated id
      * 
+     * @param string $id
      * @return string
      */
-    public function deleteAction()
+    public function deleteAction($id)
     {
-        return $this->invokeRemoval('pageManager');
+        return $this->invokeRemoval('pageManager', $id);
     }
 
     /**

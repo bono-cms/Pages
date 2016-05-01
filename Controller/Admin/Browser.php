@@ -35,10 +35,6 @@ final class Browser extends AbstractController
      */
     private function createGrid(array $pages, $url = null)
     {
-        // Load view plugins
-        $this->view->getPluginBag()
-                   ->appendScript('@Pages/admin/page.browser.js');
-
         // Append a breadcrumb
         $this->view->getBreadcrumbBag()
                    ->addOne('Pages');

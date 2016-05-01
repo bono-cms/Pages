@@ -18,7 +18,7 @@ use Krystal\Form\Element;
 
 		 <?php if (!empty($pages)): ?>
 		 <li><a href="#" data-button="save-changes" data-url="<?php echo $this->url('Pages:Admin:Page@tweakAction'); ?>"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Save changes'); ?></a></li>
-		 <li><a href="#" data-button="remove-selected" data-url="<?php echo $this->url('Pages:Admin:Page@deleteAction'); ?>"><i class="glyphicon glyphicon-remove"></i> <?php $this->show('Remove selected'); ?></a></li>
+		 <li><a href="#" data-button="remove-selected" data-url="<?php echo $this->url('Pages:Admin:Page@deleteAction', null); ?>"><i class="glyphicon glyphicon-remove"></i> <?php $this->show('Remove selected'); ?></a></li>
 		 <?php else: ?>
 		 <li class="disabled"><a><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Save changes'); ?></a></li>
 		 <li class="disabled"><a><i class="glyphicon glyphicon-remove"></i> <?php $this->show('Remove selected'); ?></a></li>
@@ -91,7 +91,7 @@ use Krystal\Form\Element;
 						<a data-toggle="tooltip" data-placement="left" data-original-title="<?php $this->show('Edit this page'); ?>" data-button="edit" href="<?php echo $this->url('Pages:Admin:Page@editAction', $page->getId()); ?>"><i class="glyphicon glyphicon-pencil"></i></a>
 						
 						<?php if ($extendedMode || !($page->isDefault() || $page->getProtected())): ?>
-						<a data-toggle="tooltip" data-placement="left" data-original-title="<?php $this->show('Remove this page'); ?>" data-button="delete" data-category="main" data-id="<?php echo $page->getId(); ?>" href="#" ><i class="glyphicon glyphicon-remove"></i></a>
+						<a data-toggle="tooltip" data-placement="left" data-original-title="<?php $this->show('Remove this page'); ?>" data-button="delete" data-url="<?php echo $this->url('Pages:Admin:Page@deleteAction', $page->getId()); ?>" href="#" ><i class="glyphicon glyphicon-remove"></i></a>
 						<?php endif; ?>
 					</td>
 				</tr>

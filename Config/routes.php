@@ -27,7 +27,7 @@ return array(
         'controller' => 'Admin:Browser@indexAction'
     ),
     
-    '/admin/module/pages/delete' => array(
+    '/admin/module/pages/delete/(:var)' => array(
         'controller' => 'Admin:Page@deleteAction',
         'disallow' => array('guest')
     ),
