@@ -10,42 +10,41 @@
  */
 
 return array(
-    
     '/module/pages/(:var)' => array(
         'controller' => 'Page@indexAction'
     ),
 
-    '/admin/module/pages/filter/(:var)' => array(
+    '/%s/module/pages/filter/(:var)' => array(
         'controller' => 'Admin:Browser@filterAction'
     ),
     
-    '/admin/module/pages' => array(
+    '/%s/module/pages' => array(
         'controller' => 'Admin:Browser@indexAction',
     ),
     
-    '/admin/module/pages/browse/(:var)' => array(
+    '/%s/module/pages/browse/(:var)' => array(
         'controller' => 'Admin:Browser@indexAction'
     ),
     
-    '/admin/module/pages/delete/(:var)' => array(
+    '/%s/module/pages/delete/(:var)' => array(
         'controller' => 'Admin:Page@deleteAction',
         'disallow' => array('guest')
     ),
     
-    '/admin/module/pages/tweak' => array(
+    '/%s/module/pages/tweak' => array(
         'controller' => 'Admin:Page@tweakAction',
         'disallow' => array('guest')
     ),
     
-    '/admin/module/pages/add' => array(
+    '/%s/module/pages/add' => array(
         'controller' => 'Admin:Page@addAction'
     ),
     
-    '/admin/module/pages/edit/(:var)' => array(
+    '/%s/module/pages/edit/(:var)' => array(
         'controller' => 'Admin:Page@editAction'
     ),
     
-    '/admin/module/pages/save' => array(
+    '/%s/module/pages/save' => array(
         'controller' => 'Admin:Page@saveAction',
         'disallow' => array('guest')
     )
