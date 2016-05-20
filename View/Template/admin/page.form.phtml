@@ -19,15 +19,15 @@ use Krystal\Form\Element;
                 <?php echo Element::hidden('page[web_page_id]', $page->getWebPageId()); ?>
                 <?php echo Element::hidden('web_page_id', $page->getWebPageId()); ?>
                 
-				<div class="form-group clearfix">
-					<label class="col-lg-2 control-label"><?php $this->show('Title'); ?></label>
-					<div class="col-lg-10">
-						<div class="input-group">
-							<?php echo Element::text('page[title]', $page->getTitle(), array('class' => 'form-control', 'data-input' => 'title', 'placeholder' => $this->translate('Page title'))); ?>
-							<span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-						</div>
-					</div>
-				</div>
+                <div class="form-group clearfix">
+                    <label class="col-lg-2 control-label"><?php $this->show('Name'); ?></label>
+                    <div class="col-lg-10">
+                        <div class="input-group">
+                            <?php echo Element::text('page[name]', $page->getName(), array('class' => 'form-control', 'placeholder' => $this->translate('Page name'))); ?>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                        </div>
+                    </div>
+                </div>
 				
 				<div class="form-group clearfix">
 					<label class="col-lg-2 control-label"><?php $this->show('Content'); ?></label>
@@ -98,6 +98,16 @@ use Krystal\Form\Element;
 							</div>
 						</div>
 					</div>
+
+                    <div class="form-group clearfix">
+                        <label class="col-lg-2 control-label"><?php $this->show('Title'); ?></label>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <?php echo Element::text('page[title]', $page->getTitle(), array('class' => 'form-control', 'data-input' => 'title', 'placeholder' => $this->translate('Page title'))); ?>
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                            </div>
+                        </div>
+                    </div>
 					
 					<div class="form-group clearfix">
 						<label class="col-lg-2 control-label"><?php $this->show('Keywords'); ?></label>

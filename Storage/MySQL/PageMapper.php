@@ -88,7 +88,7 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
 
         $db = $this->db->select('*')
                         ->from(static::getTableName())
-                        ->whereLike('title', '%'.$input['title'].'%', true)
+                        ->whereLike('name', '%'.$input['name'].'%', true)
                         ->andWhereEquals('id', $input['id'], true)
                         ->andWhereEquals('seo', $input['seo'], true)
                         ->orderBy($sortingColumn);
@@ -120,12 +120,12 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
     }
 
     /**
-     * Fetches page title by its associated id
+     * Fetches page name by its associated id
      * 
      * @param string $id Page id
      * @return string
      */
-    public function fetchTitleById($id)
+    public function fetchNameById($id)
     {
         return $this->findColumnByPk($id, 'title');
     }

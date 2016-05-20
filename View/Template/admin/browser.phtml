@@ -44,7 +44,7 @@ use Krystal\Form\Element;
 						<a <?php echo HtmlHelper::addClassOnDemand($filter->isSortedBy('id'), 'text-info'); ?> href="<?php echo $filter->getColumnSortingUrl('id'); ?>"><i class="<?php echo $filter->isSortedByDesc('id') ? 'glyphicon glyphicon-arrow-down': 'glyphicon glyphicon-arrow-up'; ?>"></i> #</a>
 					</th>
 					<th class="text-center">
-						<a <?php echo HtmlHelper::addClassOnDemand($filter->isSortedBy('title'), 'text-info'); ?> href="<?php echo $filter->getColumnSortingUrl('title'); ?>"><i class="<?php echo $filter->isSortedByDesc('title') ? 'glyphicon glyphicon-arrow-down': 'glyphicon glyphicon-arrow-up'; ?>"></i> <?php $this->show('Title'); ?></a>
+						<a <?php echo HtmlHelper::addClassOnDemand($filter->isSortedBy('name'), 'text-info'); ?> href="<?php echo $filter->getColumnSortingUrl('name'); ?>"><i class="<?php echo $filter->isSortedByDesc('name') ? 'glyphicon glyphicon-arrow-down': 'glyphicon glyphicon-arrow-up'; ?>"></i> <?php $this->show('Name'); ?></a>
 					</th>
 					<th class="text-center"><?php $this->show('Default'); ?></th>
 					<th class="text-center">
@@ -58,7 +58,7 @@ use Krystal\Form\Element;
 						<?php echo Element::number($filter->getElementName('id'), $filter->get('id'), array('class' => 'form-control')); ?>
 					</td>
 					<td>
-                        <?php echo Element::text($filter->getElementName('title'), $filter->get('title'), array('class' => 'form-control')); ?>
+                        <?php echo Element::text($filter->getElementName('name'), $filter->get('name'), array('class' => 'form-control')); ?>
 					</td>
 					<td></td>
 					<td class="col-lg-1">
@@ -79,7 +79,7 @@ use Krystal\Form\Element;
 						<?php endif; ?>
 					</td>
 					<td class="text-center text-muted"><?php echo $page->getId(); ?></td>
-					<td class="text-center"><?php echo $page->getTitle(); ?></td>
+					<td class="text-center"><?php echo $page->getName(); ?></td>
 					<td class="text-center">
                         <?php echo Element::radio('default', $page->getId(), $page->isDefault()); ?>
 					</td>

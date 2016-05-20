@@ -48,12 +48,12 @@ interface PageMapperInterface
     public function fetchAllByPage($page, $itemsPerPage);
 
     /**
-     * Fetches page title by its associated id
+     * Fetches page name by its associated id
      * 
      * @param string $id Page id
-     * @retunr string
+     * @return string
      */
-    public function fetchTitleById($id);
+    public function fetchNameById($id);
 
     /**
      * Fetches page data by its associated id

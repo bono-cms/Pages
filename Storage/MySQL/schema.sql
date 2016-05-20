@@ -9,6 +9,7 @@ CREATE TABLE `bono_module_pages` (
 	`template` varchar(32) NOT NULL COMMENT 'Template override',
 	`protected` varchar(1) NOT NULL COMMENT 'Whether this page is allowed to be removed in simple mode',
 	`title` varchar(255) NOT NULL COMMENT 'Page title',
+	`name` varchar(255) NOT NULL COMMENT 'Page name',
 	`content` TEXT NOT NULL COMMENT 'Fits for description',
 	`seo` varchar(1) NOT NULL COMMENT 'Whether it should be indexed in SEO',
 	`keywords` TEXT NOT NULL,

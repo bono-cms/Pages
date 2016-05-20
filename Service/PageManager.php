@@ -138,6 +138,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
                 ->setLangId((int) $page['lang_id'])
                 ->setWebPageId((int) $page['web_page_id'])
                 ->setTitle(Filter::escape($page['title']))
+                ->setName(Filter::escape($page['name']))
                 ->setContent(Filter::escapeContent($page['content']))
                 ->setSlug(Filter::escape($meta['slug']))
                 ->setController($meta['controller'])
@@ -271,15 +272,18 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     {
         $page =& $input['page'];
 
+        // Generate empty slug from the name
         if (empty($page['slug'])) {
-            $page['slug'] = $page['title'];
+            $page['slug'] = $page['name'];
+        }
+
+        // Generate empty title from the name
+        if (empty($page['title'])) {
+            $page['title'] = $page['name'];
         }
 
         // Make it look like a a slug now
         $page['slug'] = $this->webPageManager->sluggify($page['slug']);
-
-        // Ensure the title is secure
-        $page['title'] = Filter::escape($page['title']);
 
         return $input;
     }
@@ -314,12 +318,12 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
             if ($this->webPageManager->add($id, $page['slug'], 'Pages', $controller, $this->pageMapper)) {
                 // Do the work in case menu widget was injected
                 if ($this->hasMenuWidget()) {
-                    $this->addMenuItem($this->webPageManager->getLastId(), $page['title'], $input);
+                    $this->addMenuItem($this->webPageManager->getLastId(), $page['name'], $input);
                 }
             }
 
             // Track it
-            $this->track('A new "%s" page has been created', $page['title']);
+            $this->track('A new "%s" page has been created', $page['name']);
             return true;
         }
     }
@@ -338,10 +342,10 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         $this->webPageManager->update($page['web_page_id'], $page['slug'], $page['controller']);
 
         if ($this->hasMenuWidget() && isset($input['menu'])) {
-            $this->updateMenuItem($page['web_page_id'], $page['title'], $input['menu']);
+            $this->updateMenuItem($page['web_page_id'], $page['name'], $input['menu']);
         }
 
-        $this->track('The page "%s" has been updated', $page['title']);
+        $this->track('The page "%s" has been updated', $page['name']);
 
         return $this->pageMapper->update(ArrayUtils::arrayWithout($page, array('controller', 'makeDefault', 'slug', 'menu')));
     }
@@ -372,10 +376,10 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     public function deleteById($id)
     {
         // Gotta grab page's title, before removing it
-        $title = Filter::escape($this->pageMapper->fetchTitleById($id));
+        $name = Filter::escape($this->pageMapper->fetchNameById($id));
 
         if ($this->delete($id)) {
-            $this->track('The page "%s" has been removed', $title);
+            $this->track('The page "%s" has been removed', $name);
             return true;
 
         } else {
