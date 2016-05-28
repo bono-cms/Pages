@@ -115,14 +115,11 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     }
 
     /**
-     * Fetches a title by web page id
-     * 
-     * @param integer $webPageId
-     * @return string
+     * {@inheritDoc}
      */
-    public function fetchTitleByWebPageId($webPageId)
+    public function fetchNameByWebPageId($webPageId)
     {
-        return $this->pageMapper->fetchTitleByWebPageId($webPageId);
+        return $this->pageMapper->fetchNameByWebPageId($webPageId);
     }
 
     /**
