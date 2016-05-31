@@ -14,13 +14,13 @@ use Krystal\Form\Element;
 	
 	<div class="tab-content">
 		<div class="tab-pane fade in active" id="page" role="tabpanel">
-			<div class="well clearfix">
+			<div class="well">
 				
                 <?php echo Element::hidden('page[id]', $page->getId()); ?>
                 <?php echo Element::hidden('page[web_page_id]', $page->getWebPageId()); ?>
                 <?php echo Element::hidden('web_page_id', $page->getWebPageId()); ?>
                 
-                <div class="form-group clearfix">
+                <div class="form-group">
                     <label class="col-lg-2 control-label"><?php $this->show('Name'); ?></label>
                     <div class="col-lg-10">
                         <div class="input-group">
@@ -30,7 +30,7 @@ use Krystal\Form\Element;
                     </div>
                 </div>
 				
-				<div class="form-group clearfix">
+				<div class="form-group">
 					<label class="col-lg-2 control-label"><?php $this->show('Content'); ?></label>
 					<div class="col-lg-10">
                         <?php echo Element::textarea('page[content]', $page->getContent(), array('data-wysiwyg' => 'true')); ?>
@@ -44,14 +44,14 @@ use Krystal\Form\Element;
 					<div class="hidden">
 					<?php endif; ?>
 					
-					<div class="form-group clearfix">
+					<div class="form-group">
 						<label class="col-lg-2 control-label"><?php $this->show('Controller'); ?></label>
 						<div class="col-lg-10">
                             <?php echo Element::select('page[controller]', $controllers, $page->getController(), array('class' => 'form-control')); ?>
 						</div>
 					</div>
 					
-					<div class="form-group clearfix">
+					<div class="form-group">
                         <label class="col-lg-2 control-label"><?php $this->show('Template override'); ?></label>
 						<div class="col-lg-10">
                             <div class="input-group">
@@ -61,7 +61,7 @@ use Krystal\Form\Element;
 						</div>
 					</div>
 					
-					<div class="form-group clearfix">
+					<div class="form-group">
 						<label class="col-lg-2 control-label"><?php $this->show('Protect'); ?></label>
 						<div class="col-lg-10">
                             <?php echo Element::checkbox('page[protected]', $page->getProtected(), array('class' => 'form-control', 'title' => $this->translate('If you protect the page you are going to created, them users that use only simple mode will not be able to remove it'))); ?>
@@ -73,7 +73,7 @@ use Krystal\Form\Element;
 					<?php endif; ?>
 					
 					<?php if (!$page->getId()): ?>
-					<div class="form-group clearfix">
+					<div class="form-group">
 						<label class="col-lg-2 control-label"><?php $this->show('Make default'); ?></label>
 						<div class="col-lg-10">
                             <?php echo Element::checkbox('page[makeDefault]', $page->getProtected(), array('class' => 'form-control', 'title' => $this->translate('Whether it should be home page or not'))); ?>
@@ -81,14 +81,14 @@ use Krystal\Form\Element;
 					</div>
 					<?php endif; ?>
 					
-					<div class="form-group clearfix">
+					<div class="form-group">
 						<label class="col-lg-2 control-label"><?php $this->show('Enable SEO'); ?></label>
 						<div class="col-lg-10">
                             <?php echo Element::checkbox('page[seo]', $page->getSeo(), array('class' => 'form-control')); ?>
 						</div>
 					</div>
 					
-					<div class="form-group clearfix">
+					<div class="form-group">
 						<label class="col-lg-2 control-label"><?php $this->show('Slug'); ?></label>
 						<div class="col-lg-10">
 							<div class="input-group">
@@ -100,7 +100,7 @@ use Krystal\Form\Element;
 						</div>
 					</div>
 
-                    <div class="form-group clearfix">
+                    <div class="form-group">
                         <label class="col-lg-2 control-label"><?php $this->show('Title'); ?></label>
                         <div class="col-lg-10">
                             <div class="input-group">
@@ -110,7 +110,7 @@ use Krystal\Form\Element;
                         </div>
                     </div>
 					
-					<div class="form-group clearfix">
+					<div class="form-group">
 						<label class="col-lg-2 control-label"><?php $this->show('Keywords'); ?></label>
 						<div class="col-lg-10">
 							<div class="input-group">
@@ -120,7 +120,7 @@ use Krystal\Form\Element;
 						</div>
 					</div>
 					
-					<div class="form-group clearfix">
+					<div class="form-group">
 						<label class="col-lg-2 control-label"><?php $this->show('Description'); ?></label>
 						<div class="col-lg-10">
                             <?php echo Element::textarea('page[meta_description]', $page->getMetaDescription(), array('class' => 'form-control', 'placeholder' => $this->translate('Meta description for search engines'))); ?>
