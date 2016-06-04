@@ -131,22 +131,22 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         $meta = $this->webPageManager->fetchById((int) $page['web_page_id']);
 
         $entity = new PageEntity();
-        $entity->setId((int) $page['id'])
-                ->setLangId((int) $page['lang_id'])
-                ->setWebPageId((int) $page['web_page_id'])
-                ->setTitle(Filter::escape($page['title']))
-                ->setName(Filter::escape($page['name']))
-                ->setContent(Filter::escapeContent($page['content']))
-                ->setSlug(Filter::escape($meta['slug']))
-                ->setController($meta['controller'])
-                ->setTemplate($page['template'])
-                ->setProtected((bool) $page['protected'])
-                ->setDefault((bool) $this->isDefault($page['id']))
-                ->setSeo((bool) $page['seo'])
-                ->setMetaDescription(Filter::escape($page['meta_description']))
+        $entity->setId($page['id'], PageEntity::FILTER_INT)
+                ->setLangId($page['lang_id'], PageEntity::FILTER_INT)
+                ->setWebPageId($page['web_page_id'], PageEntity::FILTER_INT)
+                ->setTitle($page['title'], PageEntity::FILTER_TAGS)
+                ->setName($page['name'], PageEntity::FILTER_TAGS)
+                ->setContent($page['content'], PageEntity::FILTER_SAFE_TAGS)
+                ->setSlug($meta['slug'], PageEntity::FILTER_TAGS)
+                ->setController($meta['controller'], PageEntity::FILTER_TAGS)
+                ->setTemplate($page['template'], PageEntity::FILTER_TAGS)
+                ->setProtected($page['protected'], PageEntity::FILTER_BOOL)
+                ->setDefault($this->isDefault($page['id']), PageEntity::FILTER_BOOL)
+                ->setSeo($page['seo'], PageEntity::FILTER_BOOL)
+                ->setMetaDescription($page['meta_description'], PageEntity::FILTER_TAGS)
                 ->setUrl($this->webPageManager->surround($entity->getSlug(), $entity->getLangId()))
                 ->setPermanentUrl('/module/pages/'.$entity->getId())
-                ->setKeywords(Filter::escape($page['keywords']));
+                ->setKeywords($page['keywords'], PageEntity::FILTER_TAGS);
 
         return $entity;
     }
