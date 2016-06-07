@@ -28,7 +28,7 @@ use Krystal\Form\Element;
 	</div>
 </div>
 
-<?php $this->loadBlock('items-per-page', array('caption' => 'Pages')); ?>
+<?php $this->loadPartial('items-per-page', array('caption' => 'Pages')); ?>
 
 <form action="<?php echo $this->url('Pages:Admin:Browser@filterAction', null); ?>">
 
@@ -121,4 +121,4 @@ use Krystal\Form\Element;
 	</div>
 </form>
 
-<?php $this->loadBlock('paginator'); ?>
+<?php $this->loadPartial('paginator'); ?>
