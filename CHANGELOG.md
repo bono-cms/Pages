@@ -4,6 +4,7 @@ CHANGELOG
 1.4
 ---
 
+ * Merged `Page` with `AbstractPagesController`
  * Added `name` attribute
  * Added support for table prefix
  * Changed module icon

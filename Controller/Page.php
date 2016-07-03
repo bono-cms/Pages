@@ -13,8 +13,9 @@ namespace Pages\Controller;
 
 use Krystal\Stdlib\VirtualEntity;
 use Krystal\Validate\Pattern;
+use Site\Controller\AbstractController;
 
-final class Page extends AbstractPagesController
+final class Page extends AbstractController
 {
     /**
      * Renders a page by its associated id
@@ -77,12 +78,12 @@ final class Page extends AbstractPagesController
      */
     public function homeAction()
     {
+        return $this->homePageAction();
         // The reason it's implemented this way, is because the CMS itself can be used to manage a single landing page
         // Landings pages mostly contain contact form at the bottom, so the request is handled within the same action
         if ($this->request->isPost()) {
             return $this->submitAction();
         } else {
-            return $this->homePageAction();
         }
     }
 
@@ -205,5 +206,25 @@ final class Page extends AbstractPagesController
             // Otherwise we should never have breadcrumbs
             $this->view->getBreadcrumbBag()->clear();
         }
+    }
+
+    /**
+     * Returns configuration entity
+     * 
+     * @return \Krystal\Stdlib\VirtualEntity
+     */
+    private function getConfig()
+    {
+        return $this->getModuleService('configManager')->getEntity();
+    }
+
+    /**
+     * Returns page manager
+     * 
+     * @return \Pages\Service\PageManager
+     */
+    private function getPageManager()
+    {
+        return $this->getModuleService('pageManager');
     }
 }
