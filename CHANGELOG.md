@@ -4,6 +4,7 @@ CHANGELOG
 1.4
 ---
 
+ * Deprecated ability to send email from the home page. MailForm module should be used instead
  * Merged `Page` with `AbstractPagesController`
  * Added `name` attribute
  * Added support for table prefix
