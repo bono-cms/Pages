@@ -119,16 +119,6 @@ final class Page extends AbstractController
     }
 
     /**
-     * Returns configuration entity
-     * 
-     * @return \Krystal\Stdlib\VirtualEntity
-     */
-    private function getConfig()
-    {
-        return $this->getModuleService('configManager')->getEntity();
-    }
-
-    /**
      * Returns page manager
      * 
      * @return \Pages\Service\PageManager
