@@ -35,7 +35,16 @@ final class Page extends AbstractController
         // If $page isn't false, then the right $id is supplied
         if ($page !== false) {
             $this->loadSitePlugins();
-            $this->loadBreadcrumbsByPageEntity($page);
+
+            // If page isn't default, then we append a breadcrumb
+            if (!$page->getDefault()) {
+                $this->view->getBreadcrumbBag()
+                           ->addOne($page->getTitle());
+            } else {
+                // Otherwise we should never have breadcrumbs
+                $this->view->getBreadcrumbBag()
+                           ->clear();
+            }
 
             return $this->view->render($this->grabTemplateName($page), array(
                 'page' => $page
@@ -106,23 +115,6 @@ final class Page extends AbstractController
             return $page->getTemplate();
         } else {
             return 'pages-page';
-        }
-    }
-
-    /**
-     * Loads breadcrumb by page's entity
-     * 
-     * @param \Krystal\Stdlib\VirtualEntity $page
-     * @return void
-     */
-    private function loadBreadcrumbsByPageEntity(VirtualEntity $page)
-    {
-        // If page isn't default, then we append a breadcrumb
-        if (!$page->getDefault()) {
-            $this->view->getBreadcrumbBag()->addOne($page->getTitle());
-        } else {
-            // Otherwise we should never have breadcrumbs
-            $this->view->getBreadcrumbBag()->clear();
         }
     }
 
