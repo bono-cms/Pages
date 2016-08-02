@@ -2,6 +2,7 @@
 
 return array(
  'name'  => 'Pages',
+ 'caption' => 'Pages',
  'route' => 'Pages:Admin:Browser@indexAction',
  'icon' => 'fa fa-file-code-o fa-5x',
  'order' => 1,
