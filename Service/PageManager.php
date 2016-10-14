@@ -134,8 +134,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         $entity->setId($page['id'], PageEntity::FILTER_INT)
                 ->setLangId($page['lang_id'], PageEntity::FILTER_INT)
                 ->setWebPageId($page['web_page_id'], PageEntity::FILTER_INT)
-                ->setTitle($page['title'], PageEntity::FILTER_TAGS)
-                ->setName($page['name'], PageEntity::FILTER_TAGS)
                 ->setContent($page['content'], PageEntity::FILTER_SAFE_TAGS)
                 ->setSlug($meta['slug'], PageEntity::FILTER_TAGS)
                 ->setController($meta['controller'], PageEntity::FILTER_TAGS)
@@ -143,10 +141,14 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
                 ->setProtected($page['protected'], PageEntity::FILTER_BOOL)
                 ->setDefault($this->isDefault($page['id']), PageEntity::FILTER_BOOL)
                 ->setSeo($page['seo'], PageEntity::FILTER_BOOL)
-                ->setMetaDescription($page['meta_description'], PageEntity::FILTER_TAGS)
                 ->setUrl($this->webPageManager->surround($entity->getSlug(), $entity->getLangId()))
                 ->setPermanentUrl('/module/pages/'.$entity->getId())
-                ->setKeywords($page['keywords'], PageEntity::FILTER_TAGS);
+
+                // Meta data
+                ->setTitle($page['title'], PageEntity::FILTER_HTML)
+                ->setName($page['name'], PageEntity::FILTER_HTML)
+                ->setMetaDescription($page['meta_description'], PageEntity::FILTER_HTML)
+                ->setKeywords($page['keywords'], PageEntity::FILTER_HTML);
 
         return $entity;
     }
