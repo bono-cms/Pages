@@ -4,6 +4,7 @@ CHANGELOG
 1.4
 ---
 
+ * Replaced `text` input with `textarea` for `keywords` attribute
  * Deprecated ability to send email from the home page. MailForm module should be used instead
  * Merged `Page` with `AbstractPagesController`
  * Added `name` attribute
