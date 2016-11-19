@@ -39,7 +39,7 @@ final class Page extends AbstractController
             // If page isn't default, then we append a breadcrumb
             if (!$page->getDefault()) {
                 $this->view->getBreadcrumbBag()
-                           ->addOne($page->getTitle());
+                           ->addOne($page->getName());
             } else {
                 // Otherwise we should never have breadcrumbs
                 $this->view->getBreadcrumbBag()
