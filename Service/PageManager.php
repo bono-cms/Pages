@@ -127,19 +127,16 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     protected function toEntity(array $page)
     {
-        // Fetch meta data
-        $meta = $this->webPageManager->fetchById((int) $page['web_page_id']);
-
         $entity = new PageEntity();
         $entity->setId($page['id'], PageEntity::FILTER_INT)
                 ->setLangId($page['lang_id'], PageEntity::FILTER_INT)
                 ->setWebPageId($page['web_page_id'], PageEntity::FILTER_INT)
                 ->setContent($page['content'], PageEntity::FILTER_SAFE_TAGS)
-                ->setSlug($meta['slug'], PageEntity::FILTER_TAGS)
-                ->setController($meta['controller'], PageEntity::FILTER_TAGS)
+                ->setSlug($page['slug'], PageEntity::FILTER_TAGS)
+                ->setController($page['controller'], PageEntity::FILTER_TAGS)
                 ->setTemplate($page['template'], PageEntity::FILTER_TAGS)
                 ->setProtected($page['protected'], PageEntity::FILTER_BOOL)
-                ->setDefault($this->isDefault($page['id']), PageEntity::FILTER_BOOL)
+                ->setDefault($page['id'] == $page['default_page_id'], PageEntity::FILTER_BOOL)
                 ->setSeo($page['seo'], PageEntity::FILTER_BOOL)
                 ->setUrl($this->webPageManager->surround($entity->getSlug(), $entity->getLangId()))
                 ->setPermanentUrl('/module/pages/'.$entity->getId())
@@ -184,34 +181,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         }
 
         return true;
-    }
-
-    /**
-     * Tells whether page id default according to language id
-     * 
-     * @param string $id
-     * @return boolean
-     */
-    private function isDefault($id)
-    {
-        return $id == $this->defaultMapper->fetchDefaultId();
-    }
-
-    /**
-     * Return default page ids
-     * 
-     * @return array
-     */
-    private function getDefaults()
-    {
-        // To cache method calls
-        static $defaults = null;
-
-        if (is_null($defaults)) {
-            $defaults = $this->defaultMapper->fetchAll();
-        }
-
-        return $defaults;
     }
 
     /**
