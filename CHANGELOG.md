@@ -4,6 +4,7 @@ CHANGELOG
 1.4
 ---
 
+ * Added `getName()` on unknown page entity
  * Fixed issues with quote escaping
  * Replaced `text` input with `textarea` for `keywords` attribute
  * Deprecated ability to send email from the home page. MailForm module should be used instead

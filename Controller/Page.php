@@ -69,6 +69,7 @@ final class Page extends AbstractController
 
         $page = new VirtualEntity();
         $page->setTitle($this->translator->translate('Page not found'))
+             ->setName($this->translator->translate('Page not found'))
              ->setContent($this->translator->translate('Requested page doesn\'t exist'))
              ->setSeo(false);
 
