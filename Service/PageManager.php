@@ -252,6 +252,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
 
         // Make it look like a a slug now
         $page['slug'] = $this->webPageManager->sluggify($page['slug']);
+        $page['web_page_id'] = (int) $page['web_page_id'];
 
         return $input;
     }
@@ -266,7 +267,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     {
         $input = $this->prepareInput($input);
         $page =& $input['page'];
-        $page['web_page_id'] = '';
 
         if (!$this->pageMapper->insert(ArrayUtils::arrayWithout($page, array('controller', 'makeDefault', 'slug', 'menu')))) {
             return false;
