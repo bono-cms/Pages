@@ -4,6 +4,7 @@ CHANGELOG
 1.4
 ---
 
+ * Added shortcut in administration panel
  * Added `getName()` on unknown page entity
  * Fixed issues with quote escaping
  * Replaced `text` input with `textarea` for `keywords` attribute
