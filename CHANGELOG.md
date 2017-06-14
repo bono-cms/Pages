@@ -4,6 +4,7 @@ CHANGELOG
 1.4
 ---
 
+ * Compact form view in administration panel
  * Added shortcut in administration panel
  * Added `getName()` on unknown page entity
  * Fixed issues with quote escaping

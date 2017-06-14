@@ -9,6 +9,7 @@ use Krystal\Form\Element;
 
 	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#page" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-file"></i> <?php $this->show('Page'); ?></a></li>
+        <li role="presentation"><a href="#configuration" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-th-list"></i> <?php $this->show('Configuration'); ?></a></li>
 		<li role="presentation"><a href="#menu" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-list"></i> <?php $this->show('Item in menu'); ?></a></li>
 	</ul>
 	
@@ -39,54 +40,6 @@ use Krystal\Form\Element;
 				
 				
 				<div class="options">
-					
-					<?php if (!$extendedMode): ?>
-					<div class="hidden">
-					<?php endif; ?>
-					
-					<div class="form-group">
-						<label class="col-lg-2 control-label"><?php $this->show('Controller'); ?></label>
-						<div class="col-lg-10">
-                            <?php echo Element::select('page[controller]', $controllers, $page->getController(), array('class' => 'form-control')); ?>
-						</div>
-					</div>
-					
-					<div class="form-group">
-                        <label class="col-lg-2 control-label"><?php $this->show('Template override'); ?></label>
-						<div class="col-lg-10">
-                            <div class="input-group">
-                                <?php echo Element::text('page[template]', $page->getTemplate(), array('class' => 'form-control', 'placeholder' => $this->translate('If you need another template which is different from default one, you can define its name here'))); ?>
-								<span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-							</div>
-						</div>
-					</div>
-					
-					<div class="form-group">
-						<label class="col-lg-2 control-label"><?php $this->show('Protect'); ?></label>
-						<div class="col-lg-10">
-                            <?php echo Element::checkbox('page[protected]', $page->getProtected(), array('class' => 'form-control', 'title' => $this->translate('If you protect the page you are going to created, them users that use only simple mode will not be able to remove it'))); ?>
-						</div>
-					</div>
-					
-					<?php if (!$extendedMode): ?>
-					</div>
-					<?php endif; ?>
-					
-					<?php if (!$page->getId()): ?>
-					<div class="form-group">
-						<label class="col-lg-2 control-label"><?php $this->show('Make default'); ?></label>
-						<div class="col-lg-10">
-                            <?php echo Element::checkbox('page[makeDefault]', $page->getProtected(), array('class' => 'form-control', 'title' => $this->translate('Whether it should be home page or not'))); ?>
-						</div>
-					</div>
-					<?php endif; ?>
-					
-					<div class="form-group">
-						<label class="col-lg-2 control-label"><?php $this->show('Enable SEO'); ?></label>
-						<div class="col-lg-10">
-                            <?php echo Element::checkbox('page[seo]', $page->getSeo(), array('class' => 'form-control')); ?>
-						</div>
-					</div>
 					
 					<div class="form-group">
 						<label class="col-lg-2 control-label"><?php $this->show('Slug'); ?></label>
@@ -125,25 +78,75 @@ use Krystal\Form\Element;
 					</div>
 				</div>
 			</div>
-
-			<?php if (!$page->getId()): ?>
-
-			<button data-button="add" data-back-url="<?php echo $this->url('Pages:Admin:Page@editAction', null); ?>" data-url="<?php echo $this->url('Pages:Admin:Page@saveAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Add'); ?></button>
-			<button data-button="add-create" data-url="<?php echo $this->url('Pages:Admin:Page@saveAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Add & Create new'); ?></button>
-
-			<?php else: ?>
-
-			<button data-button="save" data-url="<?php echo $this->url('Pages:Admin:Page@saveAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Save'); ?></button>
-			<button data-button="save-create" data-back-url="<?php echo $this->url('Pages:Admin:Page@addAction'); ?>" data-url="<?php echo $this->url('Pages:Admin:Page@saveAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Save & Create new'); ?></button>
-
-			<?php endif; ?>
-
-			<button data-button="options" class="btn btn-primary"><i class="glyphicon glyphicon-open"></i> <?php $this->show('More options'); ?></button>
-			<button data-button="cancel" data-url="<?php echo $this->url('Pages:Admin:Browser@indexAction'); ?>" type="button" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> <?php $this->show('Cancel'); ?></button>
 		</div>
 
-		<div class="tab-pane fade" id="menu" role="tabpanel">
-			<?php $this->loadPartial('menu-widget'); ?>
+        <div role="tabpanel" class="tab-pane" id="configuration">
+            <div class="well">
+                <?php if (!$extendedMode): ?>
+                <div class="hidden">
+                <?php endif; ?>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label"><?php $this->show('Controller'); ?></label>
+                    <div class="col-lg-10">
+                        <?php echo Element::select('page[controller]', $controllers, $page->getController(), array('class' => 'form-control')); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label"><?php $this->show('Template override'); ?></label>
+                    <div class="col-lg-10">
+                        <div class="input-group">
+                            <?php echo Element::text('page[template]', $page->getTemplate(), array('class' => 'form-control', 'placeholder' => $this->translate('If you need another template which is different from default one, you can define its name here'))); ?>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label"><?php $this->show('Protect'); ?></label>
+                    <div class="col-lg-10">
+                        <?php echo Element::checkbox('page[protected]', $page->getProtected(), array('class' => 'form-control', 'title' => $this->translate('If you protect the page you are going to created, them users that use only simple mode will not be able to remove it'))); ?>
+                    </div>
+                </div>
+
+                <?php if (!$extendedMode): ?>
+                </div>
+                <?php endif; ?>
+
+                <?php if (!$page->getId()): ?>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label"><?php $this->show('Make default'); ?></label>
+                    <div class="col-lg-10">
+                        <?php echo Element::checkbox('page[makeDefault]', $page->getProtected(), array('class' => 'form-control', 'title' => $this->translate('Whether it should be home page or not'))); ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label"><?php $this->show('Enable SEO'); ?></label>
+                    <div class="col-lg-10">
+                        <?php echo Element::checkbox('page[seo]', $page->getSeo(), array('class' => 'form-control')); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="menu" role="tabpanel">
+            <?php $this->loadPartial('menu-widget'); ?>
 		</div>
 	</div>
+
+    <?php if (!$page->getId()): ?>
+    <button data-button="add" data-back-url="<?php echo $this->url('Pages:Admin:Page@editAction', null); ?>" data-url="<?php echo $this->url('Pages:Admin:Page@saveAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Add'); ?></button>
+    <button data-button="add-create" data-url="<?php echo $this->url('Pages:Admin:Page@saveAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Add & Create new'); ?></button>
+
+    <?php else: ?>
+    <button data-button="save" data-url="<?php echo $this->url('Pages:Admin:Page@saveAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Save'); ?></button>
+    <button data-button="save-create" data-back-url="<?php echo $this->url('Pages:Admin:Page@addAction'); ?>" data-url="<?php echo $this->url('Pages:Admin:Page@saveAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Save & Create new'); ?></button>
+
+    <?php endif; ?>
+
+    <button data-button="options" class="btn btn-primary"><i class="glyphicon glyphicon-open"></i> <?php $this->show('More options'); ?></button>
+    <button data-button="cancel" data-url="<?php echo $this->url('Pages:Admin:Browser@indexAction'); ?>" type="button" class="btn btn-default"><i class="glyphicon glyphicon-floppy-remove"></i> <?php $this->show('Cancel'); ?></button>
 </form>
