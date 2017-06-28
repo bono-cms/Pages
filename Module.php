@@ -22,10 +22,9 @@ final class Module extends AbstractCmsModule
     public function getServiceProviders()
     {
         $pageMapper = $this->getMapper('/Pages/Storage/MySQL/PageMapper');
-        $defaultMapper = $this->getMapper('/Pages/Storage/MySQL/DefaultMapper');
 
         return array(
-            'pageManager' => new PageManager($pageMapper, $defaultMapper, $this->getWebPageManager(), $this->getHistoryManager())
+            'pageManager' => new PageManager($pageMapper, $this->getWebPageManager(), $this->getHistoryManager())
         );
     }
 }

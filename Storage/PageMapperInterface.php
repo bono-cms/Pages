@@ -14,6 +14,14 @@ namespace Pages\Storage;
 interface PageMapperInterface
 {
     /**
+     * Marks page ID as a default one
+     * 
+     * @param string $id Page ID
+     * @return boolean
+     */
+    public function updateDefault($id);
+
+    /**
      * Updates whether SEO should be enabled or not
      * 
      * @param string $id Page id
@@ -30,6 +38,13 @@ interface PageMapperInterface
      * @return array
      */
     public function fetchAllByPage($page, $itemsPerPage);
+
+    /**
+     * Fetches default page
+     * 
+     * @return array
+     */
+    public function fetchDefault();
 
     /**
      * Fetches page data by its associated id

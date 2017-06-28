@@ -32,13 +32,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     private $pageMapper;
 
     /**
-     * A mapper which is responsible for handling default page ids with language associations
-     * 
-     * @var \Page\Storage\DefaultMapper
-     */
-    private $defaultMapper;
-
-    /**
      * Web page manager is responsible for managing slugs
      * 
      * @var \Cms\Service\WebPageManagerInterface
@@ -56,7 +49,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      * State initialization
      * 
      * @param \Page\Storage\PageMapperInterface $pageMapper
-     * @param \Page\Storage\DefaultMapper $defaultMapper
      * @param \Cms\Service\WebPageManagerInterface $webPageManager
      * @param \Cms\Service\HistoryManagerInterface $historyManager
      * @param \Menu\Service\MenuWidgetInterface $menuWidget Optional menu widget service
@@ -64,12 +56,10 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function __construct(
         PageMapperInterface $pageMapper, 
-        DefaultMapperInterface $defaultMapper, 
         WebPageManagerInterface $webPageManager, 
         HistoryManagerInterface $historyManager
     ){
         $this->pageMapper = $pageMapper;
-        $this->defaultMapper = $defaultMapper;
         $this->webPageManager = $webPageManager;
         $this->historyManager = $historyManager;
     }
@@ -82,7 +72,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function fetchWebPageIdById($id)
     {
-        return $this->pageMapper->fetchWebPageIdById($id);
+        return;
     }
 
     /**
@@ -107,8 +97,8 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function getDefaultWebPageId()
     {
-        $id = $this->defaultMapper->fetchDefaultId();
-        return (int) $this->pageMapper->fetchWebPageIdByPageId($id);
+        $page = $this->fetchDefault();
+        return $page->getWebPageId();
     }
 
     /**
@@ -133,11 +123,8 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
                 ->setController($page['controller'], PageEntity::FILTER_TAGS)
                 ->setTemplate($page['template'], PageEntity::FILTER_TAGS)
                 ->setProtected($page['protected'], PageEntity::FILTER_BOOL)
-                
-                // @TODO Fix this
-                ->setDefault($page['id'], PageEntity::FILTER_BOOL)
-                
                 ->setSeo($page['seo'], PageEntity::FILTER_BOOL)
+                ->setDefault($page['default'], PageEntity::FILTER_BOOL)
                 ->setUrl($this->webPageManager->surround($entity->getSlug(), $entity->getLangId()))
                 ->setPermanentUrl('/module/pages/'.$entity->getId())
 
@@ -157,13 +144,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function fetchDefault()
     {
-        $id = $this->defaultMapper->fetchDefaultId();
-
-        if ($id) {
-            return $this->fetchById($id);
-        } else {
-            return false;
-        }
+        return $this->prepareResult($this->pageMapper->fetchDefault());
     }
 
     /**
@@ -191,11 +172,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function makeDefault($id)
     {
-        if ($this->defaultMapper->exists()) {
-            return $this->defaultMapper->update($id);
-        } else {
-            return $this->defaultMapper->insert($id);
-        }
+        return $this->pageMapper->updateDefault((int) $id);
     }
 
     /**

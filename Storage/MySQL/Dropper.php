@@ -21,8 +21,7 @@ final class Dropper extends AbstractStorageDropper
     protected function getTables()
     {
         return array(
-            PageMapper::getTableName(),
-            DefaultMapper::getTableName()
+            PageMapper::getTableName()
         );
     }
 }

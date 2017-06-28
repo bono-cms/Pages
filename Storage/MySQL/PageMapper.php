@@ -51,6 +51,7 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
             self::getFullColumnName('template'),
             self::getFullColumnName('protected'),
             self::getFullColumnName('seo'),
+            self::getFullColumnName('default'),
             self::getFullColumnName('title', self::getTranslationTable()),
             self::getFullColumnName('name', self::getTranslationTable()),
             self::getFullColumnName('meta_description', self::getTranslationTable()),
@@ -59,10 +60,24 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
             // Web page meta columns
             WebPageMapper::getFullColumnName('slug'),
             WebPageMapper::getFullColumnName('controller'),
-
-            // Default page ID
-            #DefaultMapper::getFullColumnName('id') => 'default_page_id'
         );
+    }
+
+    /**
+     * Marks page ID as a default one
+     * 
+     * @param string $id Page ID
+     * @return boolean
+     */
+    public function updateDefault($id)
+    {
+        // Data to be updated
+        $data = array(
+            'default' => new RawSqlFragment('CASE WHEN id = '.$id.' THEN 1 ELSE 0 END')
+        );
+
+        return $this->db->update(self::getTableName(), $data)
+                        ->execute();
     }
 
     /**
@@ -94,13 +109,6 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
         }
 
         $db = $this->createWebPageSelect($this->getColumns())
-                    // Default relation
-                    ->leftJoin(DefaultMapper::getTableName())
-                    ->on()
-                    ->equals(DefaultMapper::getFullColumnName('id'), new RawSqlFragment(self::getFullColumnName('id')))
-                    ->rawAnd()
-                    ->equals(DefaultMapper::getFullColumnName('lang_id'), new RawSqlFragment(self::getFullColumnName('lang_id', self::getTranslationTable())))
-
                     // Optional attribute filters
                     ->whereEquals(self::getFullColumnName('lang_id', self::getTranslationTable()), $this->getLangId())
                     ->andWhereLike(self::getFullColumnName('name', self::getTranslationTable()), '%'.$input['name'].'%', true)
@@ -126,6 +134,19 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
     public function fetchAllByPage($page, $itemsPerPage)
     {
         return $this->filter(new InputDecorator(), $page, $itemsPerPage, false, true);
+    }
+
+    /**
+     * Fetches default page
+     * 
+     * @return array
+     */
+    public function fetchDefault()
+    {
+        return $this->createWebPageSelect($this->getColumns())
+                    ->whereEquals(self::getFullColumnName('default'), new RawSqlFragment('1'))
+                    ->andWhereEquals(self::getFullColumnName(self::PARAM_COLUMN_LANG_ID, self::getTranslationTable()), $this->getLangId())
+                    ->query();
     }
 
     /**

@@ -6,6 +6,7 @@ CREATE TABLE `bono_module_pages` (
 	`template` varchar(32) NOT NULL COMMENT 'Template override',
 	`protected` varchar(1) NOT NULL COMMENT 'Whether this page is allowed to be removed in simple mode',
 	`seo` varchar(1) NOT NULL COMMENT 'Whether it should be indexed in SEO',
+    `default` varchar(1) NOT NULL COMMENT 'Whether this page is considered default'
 
 ) DEFAULT CHARSET = UTF8;
 
@@ -22,10 +23,3 @@ CREATE TABLE `bono_module_pages_translations` (
     `meta_description` TEXT NOT NULL COMMENT 'Meta-description for search engines'
 
 ) DEFAULT CHARSET = UTF8;
-
-
-DROP TABLE IF EXISTS `bono_module_pages_defaults`;
-CREATE TABLE `bono_module_pages_defaults` (
-    `id` INT NOT NULL PRIMARY KEY,
-	`lang_id` INT NOT NULL
-);
