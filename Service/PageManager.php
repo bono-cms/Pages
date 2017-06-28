@@ -136,7 +136,10 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
                 ->setController($page['controller'], PageEntity::FILTER_TAGS)
                 ->setTemplate($page['template'], PageEntity::FILTER_TAGS)
                 ->setProtected($page['protected'], PageEntity::FILTER_BOOL)
-                ->setDefault($page['id'] == $page['default_page_id'], PageEntity::FILTER_BOOL)
+                
+                // @TODO Fix this
+                ->setDefault($page['id'], PageEntity::FILTER_BOOL)
+                
                 ->setSeo($page['seo'], PageEntity::FILTER_BOOL)
                 ->setUrl($this->webPageManager->surround($entity->getSlug(), $entity->getLangId()))
                 ->setPermanentUrl('/module/pages/'.$entity->getId())
@@ -231,30 +234,16 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     }
 
     /**
-     * Prepares data container before sending to the mapper
+     * Save a page
      * 
-     * @param array $input Raw input data
-     * @return array
+     * @param array $input
+     * @return boolean
      */
-    private function prepareInput(array $input)
+    private function savePage(array $input)
     {
-        $page =& $input['page'];
+        $data = ArrayUtils::arrayWithout($input['page'], array('controller', 'makeDefault', 'slug', 'menu'));
 
-        // Generate empty slug from the name
-        if (empty($page['slug'])) {
-            $page['slug'] = $page['name'];
-        }
-
-        // Generate empty title from the name
-        if (empty($page['title'])) {
-            $page['title'] = $page['name'];
-        }
-
-        // Make it look like a a slug now
-        $page['slug'] = $this->webPageManager->sluggify($page['slug']);
-        $page['web_page_id'] = (int) $page['web_page_id'];
-
-        return $input;
+        return $this->pageMapper->savePage('Pages', 'Pages:Page@indexAction', $data, $input['translation']);
     }
 
     /**
@@ -265,35 +254,18 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function add(array $input)
     {
-        $input = $this->prepareInput($input);
-        $page =& $input['page'];
+        $this->savePage($input);
 
-        if (!$this->pageMapper->insert(ArrayUtils::arrayWithout($page, array('controller', 'makeDefault', 'slug', 'menu')))) {
-            return false;
-        } else {
-            // It was inserted successfully
-            $id = $this->getLastId();
+        // It was inserted successfully
+        $id = $this->getLastId();
 
-            // If checkbox was checked
-            if (isset($page['makeDefault']) && $page['makeDefault'] == '1') {
-                $this->makeDefault($id);
-            }
-
-            // Use custom controller if provided by user
-            $controller = isset($page['controller']) ? $page['controller'] : 'Pages:Page@indexAction';
-
-            // Add a web page now
-            if ($this->webPageManager->add($id, $page['slug'], 'Pages', $controller, $this->pageMapper)) {
-                // Do the work in case menu widget was injected
-                if ($this->hasMenuWidget()) {
-                    $this->addMenuItem($this->webPageManager->getLastId(), $page['name'], $input);
-                }
-            }
-
-            // Track it
-            $this->track('A new "%s" page has been created', $page['name']);
-            return true;
+        // If checkbox was checked
+        if (isset($input['page']['makeDefault']) && $input['page']['makeDefault'] == '1') {
+            $this->makeDefault($id);
         }
+
+        #$this->track('A new "%s" page has been created', $page['name']);
+        return true;
     }
 
     /**
@@ -304,18 +276,10 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function update(array $input)
     {
-        $input = $this->prepareInput($input);
-        $page =& $input['page'];
+        $this->savePage($input);
 
-        $this->webPageManager->update($page['web_page_id'], $page['slug'], $page['controller']);
-
-        if ($this->hasMenuWidget() && isset($input['menu'])) {
-            $this->updateMenuItem($page['web_page_id'], $page['name'], $input['menu']);
-        }
-
-        $this->track('The page "%s" has been updated', $page['name']);
-
-        return $this->pageMapper->update(ArrayUtils::arrayWithout($page, array('controller', 'makeDefault', 'slug', 'menu')));
+        #$this->track('The page "%s" has been updated', $page['name']);
+        return true;
     }
 
     /**
@@ -327,12 +291,9 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     private function delete($id)
     {
         $webPageId = $this->pageMapper->fetchWebPageIdById($id);
-
         $this->menuWidget->deleteAllByWebPageId($webPageId);
-        $this->webPageManager->deleteById($webPageId);
-        $this->pageMapper->deleteById($id);
 
-        return true;
+        return $this->pageMapper->deletePage($id);
     }
 
     /**
@@ -344,10 +305,10 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     public function deleteById($id)
     {
         // Gotta grab page's title, before removing it
-        $name = Filter::escape($this->pageMapper->fetchNameById($id));
+        #$name = Filter::escape($this->pageMapper->fetchNameById($id));
 
         if ($this->delete($id)) {
-            $this->track('The page "%s" has been removed', $name);
+            #$this->track('The page "%s" has been removed', $name);
             return true;
 
         } else {
@@ -377,11 +338,16 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      * Fetches a record by its associated id
      * 
      * @param string $id
+     * @param boolean $withTranslations Whether to fetch translations
      * @return \Krystal\Stdlib\VirtualEntity
      */
-    public function fetchById($id)
+    public function fetchById($id, $withTranslations = false)
     {
-        return $this->prepareResult($this->pageMapper->fetchById($id));
+        if ($withTranslations === true) {
+            return $this->prepareResults($this->pageMapper->fetchById($id, true));
+        } else {
+            return $this->prepareResult($this->pageMapper->fetchById($id, false));
+        }
     }
 
     /**

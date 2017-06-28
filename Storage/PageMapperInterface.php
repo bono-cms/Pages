@@ -14,22 +14,6 @@ namespace Pages\Storage;
 interface PageMapperInterface
 {
     /**
-     * Inserts a page
-     * 
-     * @param array $data Page data
-     * @return boolean
-     */
-    public function insert(array $data);
-
-    /**
-     * Updates a page
-     * 
-     * @param array $data Page data
-     * @return boolean
-     */
-    public function update(array $data);
-
-    /**
      * Updates whether SEO should be enabled or not
      * 
      * @param string $id Page id
@@ -48,26 +32,11 @@ interface PageMapperInterface
     public function fetchAllByPage($page, $itemsPerPage);
 
     /**
-     * Fetches page name by its associated id
-     * 
-     * @param string $id Page id
-     * @return string
-     */
-    public function fetchNameById($id);
-
-    /**
      * Fetches page data by its associated id
      * 
      * @param string $id Page id
+     * @param boolean $withTranslations Whether to fetch translations
      * @return array
      */
-    public function fetchById($id);
-
-    /**
-     * Deletes a page by its associated id
-     * 
-     * @param string $id Page id
-     * @return boolean
-     */
-    public function deleteById($id);
+    public function fetchById($id, $withTranslations);
 }

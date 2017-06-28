@@ -96,7 +96,8 @@ interface PageManagerInterface
      * Fetches a record by its associated id
      * 
      * @param string $id
-     * @return \Krystal\Stdlib\VirtualBag
+     * @param boolean $withTranslations Whether to fetch translations
+     * @return \Krystal\Stdlib\VirtualEntity
      */
-    public function fetchById($id);
+    public function fetchById($id, $withTranslations = false);
 }

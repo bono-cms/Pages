@@ -29,6 +29,14 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public static function getTranslationTable()
+    {
+        return self::getWithPrefix('bono_module_pages_translations');
+    }
+
+    /**
      * Return shared columns to be selected
      * 
      * @return array
@@ -37,46 +45,24 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
     {
         return array(
             self::getFullColumnName('id'),
-            self::getFullColumnName('lang_id'),
-            self::getFullColumnName('web_page_id'),
-            self::getFullColumnName('content'),
+            self::getFullColumnName('lang_id', self::getTranslationTable()),
+            self::getFullColumnName('web_page_id', self::getTranslationTable()),
+            self::getFullColumnName('content', self::getTranslationTable()),
             self::getFullColumnName('template'),
             self::getFullColumnName('protected'),
             self::getFullColumnName('seo'),
-            self::getFullColumnName('title'),
-            self::getFullColumnName('name'),
-            self::getFullColumnName('meta_description'),
-            self::getFullColumnName('keywords'),
+            self::getFullColumnName('title', self::getTranslationTable()),
+            self::getFullColumnName('name', self::getTranslationTable()),
+            self::getFullColumnName('meta_description', self::getTranslationTable()),
+            self::getFullColumnName('keywords', self::getTranslationTable()),
 
             // Web page meta columns
             WebPageMapper::getFullColumnName('slug'),
             WebPageMapper::getFullColumnName('controller'),
 
             // Default page ID
-            DefaultMapper::getFullColumnName('id') => 'default_page_id'
+            #DefaultMapper::getFullColumnName('id') => 'default_page_id'
         );
-    }
-
-    /**
-     * Inserts a page
-     * 
-     * @param array $input Raw input data
-     * @return boolean
-     */
-    public function insert(array $input)
-    {
-        return $this->persist($this->getWithLang($input));
-    }
-
-    /**
-     * Updates a page
-     * 
-     * @param array $input Raw input data
-     * @return boolean
-     */
-    public function update(array $input)
-    {
-        return $this->persist($input);
     }
 
     /**
@@ -118,25 +104,20 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
             $sortingColumn = $this->getPk();
         }
 
-        $db = $this->db->select($this->getColumns())
-                        ->from(self::getTableName())
-                        ->innerJoin(WebPageMapper::getTableName())
-                        ->on()
-                        ->equals(self::getFullColumnName('web_page_id'), new RawSqlFragment(WebPageMapper::getFullColumnName('id')))
-                        ->rawAnd()
-                        ->equals(self::getFullColumnName('lang_id'), $this->getLangId())
+        $db = $this->createWebPageSelect($this->getColumns())
+                    // Default relation
+                    ->leftJoin(DefaultMapper::getTableName())
+                    ->on()
+                    ->equals(DefaultMapper::getFullColumnName('id'), new RawSqlFragment(self::getFullColumnName('id')))
+                    ->rawAnd()
+                    ->equals(DefaultMapper::getFullColumnName('lang_id'), new RawSqlFragment(self::getFullColumnName('lang_id', self::getTranslationTable())))
 
-                        // Optional filters
-                        ->andWhereLike(self::getFullColumnName('name'), '%'.$input['name'].'%', true)
-                        ->andWhereEquals(self::getFullColumnName($this->getPk()), $input['id'], true)
-                        ->andWhereEquals(self::getFullColumnName('seo'), $input['seo'], true)
-
-                        ->leftJoin(DefaultMapper::getTableName())
-                        ->on()
-                        ->equals(DefaultMapper::getFullColumnName('id'), new RawSqlFragment(self::getFullColumnName('id')))
-                        ->rawAnd()
-                        ->equals(DefaultMapper::getFullColumnName('lang_id'), new RawSqlFragment(self::getFullColumnName('lang_id')))
-                        ->orderBy(self::getFullColumnName($sortingColumn));
+                    // Optional attribute filters
+                    ->whereEquals(self::getFullColumnName('lang_id', self::getTranslationTable()), $this->getLangId())
+                    ->andWhereLike(self::getFullColumnName('name', self::getTranslationTable()), '%'.$input['name'].'%', true)
+                    ->andWhereEquals(self::getFullColumnName($this->getPk()), $input['id'], true)
+                    ->andWhereEquals(self::getFullColumnName('seo'), $input['seo'], true)
+                    ->orderBy(self::getFullColumnName($sortingColumn));
 
         if ($desc) {
             $db->desc();
@@ -159,49 +140,14 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
     }
 
     /**
-     * Fetches page name by its associated id
-     * 
-     * @param string $id Page id
-     * @return string
-     */
-    public function fetchNameById($id)
-    {
-        return $this->findColumnByPk($id, 'title');
-    }
-
-    /**
      * Fetches page data by its associated id
      * 
      * @param string $id Page id
+     * @param boolean $withTranslations Whether to fetch translations
      * @return array
      */
-    public function fetchById($id)
+    public function fetchById($id, $withTranslations)
     {
-        return $this->db->select($this->getColumns())
-                        ->from(self::getTableName())
-                        ->innerJoin(WebPageMapper::getTableName())
-                        ->on()
-                        ->equals(self::getFullColumnName('web_page_id'), new RawSqlFragment(WebPageMapper::getFullColumnName('id')))
-                        ->rawAnd()
-                        ->equals(self::getFullColumnName('id'), $id)
-                        ->leftJoin(DefaultMapper::getTableName())
-                        ->on()
-                        ->equals(DefaultMapper::getFullColumnName('id'), new RawSqlFragment(self::getFullColumnName('id')))
-                        ->rawAnd()
-                        ->equals(DefaultMapper::getFullColumnName('lang_id'), new RawSqlFragment(self::getFullColumnName('lang_id')))
-                        ->orderBy(self::getFullColumnName('id'))
-                        ->desc()
-                        ->query();
-    }
-
-    /**
-     * Deletes a page by its associated id
-     * 
-     * @param string $id Page id
-     * @return boolean
-     */
-    public function deleteById($id)
-    {
-        return $this->deleteByPk($id);
+        return $this->findWebPage($this->getColumns(), $id, $withTranslations);
     }
 }
