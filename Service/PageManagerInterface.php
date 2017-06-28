@@ -15,6 +15,14 @@ namespace Pages\Service;
 interface PageManagerInterface
 {
     /**
+     * Returns a collection of switching URLs
+     * 
+     * @param string $id Page ID
+     * @return array
+     */
+    public function getSwitchUrls($id);
+
+    /**
      * Fetches default page bag
      * 
      * @return object|boolean

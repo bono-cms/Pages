@@ -47,7 +47,8 @@ final class Page extends AbstractController
             }
 
             return $this->view->render($this->grabTemplateName($page), array(
-                'page' => $page
+                'page' => $page,
+                'languages' => $this->getPageManager()->getSwitchUrls($id)
             ));
 
         } else {
