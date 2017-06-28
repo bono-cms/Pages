@@ -4,6 +4,8 @@ CHANGELOG
 1.4
 ---
 
+ * Support complete internalization
+ * Removed menu widget
  * Compact form view in administration panel
  * Added shortcut in administration panel
  * Added `getName()` on unknown page entity
