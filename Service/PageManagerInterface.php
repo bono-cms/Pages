@@ -22,6 +22,24 @@ interface PageManagerInterface
     public function fetchDefault();
 
     /**
+     * Fetches all pages filtered by pagination
+     * 
+     * @param string $page Current page
+     * @param string $itemsPerPage Items per page count
+     * @return array
+     */
+    public function fetchAllByPage($page, $itemsPerPage);
+
+    /**
+     * Fetches a record by its associated id
+     * 
+     * @param string $id
+     * @param boolean $withTranslations Whether to fetch translations
+     * @return \Krystal\Stdlib\VirtualEntity
+     */
+    public function fetchById($id, $withTranslations = false);
+
+    /**
      * Updates page's seo property by its associated id
      * 
      * @param array $pair
@@ -36,15 +54,6 @@ interface PageManagerInterface
      * @return boolean
      */
     public function makeDefault($id);
-
-    /**
-     * Fetches all pages filtered by pagination
-     * 
-     * @param string $page Current page
-     * @param string $itemsPerPage Items per page count
-     * @return array
-     */
-    public function fetchAllByPage($page, $itemsPerPage);
 
     /**
      * Returns prepared paginator instance
@@ -91,13 +100,4 @@ interface PageManagerInterface
      * @return boolean
      */
     public function deleteByIds(array $ids);
-
-    /**
-     * Fetches a record by its associated id
-     * 
-     * @param string $id
-     * @param boolean $withTranslations Whether to fetch translations
-     * @return \Krystal\Stdlib\VirtualEntity
-     */
-    public function fetchById($id, $withTranslations = false);
 }

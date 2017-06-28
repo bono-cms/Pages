@@ -16,13 +16,11 @@ use Cms\Service\WebPageManagerInterface;
 use Cms\Service\HistoryManagerInterface;
 use Pages\Storage\PageMapperInterface;
 use Pages\Storage\DefaultMapperInterface;
-use Menu\Contract\MenuAwareManager;
-use Menu\Service\MenuWidgetInterface;
 use Krystal\Security\Filter;
 use Krystal\Stdlib\ArrayUtils;
 use Krystal\Db\Filter\FilterableServiceInterface;
 
-final class PageManager extends AbstractManager implements PageManagerInterface, FilterableServiceInterface, MenuAwareManager
+final class PageManager extends AbstractManager implements PageManagerInterface, FilterableServiceInterface
 {
     /**
      * Any compliant page mapper
@@ -51,7 +49,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      * @param \Page\Storage\PageMapperInterface $pageMapper
      * @param \Cms\Service\WebPageManagerInterface $webPageManager
      * @param \Cms\Service\HistoryManagerInterface $historyManager
-     * @param \Menu\Service\MenuWidgetInterface $menuWidget Optional menu widget service
      * @return void
      */
     public function __construct(
@@ -62,17 +59,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         $this->pageMapper = $pageMapper;
         $this->webPageManager = $webPageManager;
         $this->historyManager = $historyManager;
-    }
-
-    /**
-     * Fetches web page id by associated page id
-     * 
-     * @param string $id Page id
-     * @return string
-     */
-    public function fetchWebPageIdById($id)
-    {
-        return;
     }
 
     /**
@@ -91,6 +77,18 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     }
 
     /**
+     * Fetches web page id by associated page id
+     * 
+     * @param string $id Page id
+     * @return string
+     */
+    public function fetchWebPageIdById($id)
+    {
+        $page = $this->fetchById($id);
+        return $page->getWebPageId();
+    }
+
+    /**
      * Returns default web page id
      * 
      * @return integer
@@ -102,11 +100,41 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     }
 
     /**
-     * {@inheritDoc}
+     * Fetches entity of default page
+     * 
+     * @return \Krystal\Stdlib\VirtualEntity|boolean
      */
-    public function fetchNameByWebPageId($webPageId)
+    public function fetchDefault()
     {
-        return $this->pageMapper->fetchNameByWebPageId($webPageId);
+        return $this->prepareResult($this->pageMapper->fetchDefault());
+    }
+
+    /**
+     * Fetches all page entities filtered by pagination
+     * 
+     * @param string $page Current page
+     * @param string $itemsPerPage Items per page count
+     * @return array
+     */
+    public function fetchAllByPage($page, $itemsPerPage)
+    {
+        return $this->prepareResults($this->pageMapper->fetchAllByPage($page, $itemsPerPage));
+    }
+
+    /**
+     * Fetches a record by its associated id
+     * 
+     * @param string $id
+     * @param boolean $withTranslations Whether to fetch translations
+     * @return \Krystal\Stdlib\VirtualEntity
+     */
+    public function fetchById($id, $withTranslations = false)
+    {
+        if ($withTranslations === true) {
+            return $this->prepareResults($this->pageMapper->fetchById($id, true));
+        } else {
+            return $this->prepareResult($this->pageMapper->fetchById($id, false));
+        }
     }
 
     /**
@@ -138,16 +166,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     }
 
     /**
-     * Fetches entity of default page
-     * 
-     * @return \Krystal\Stdlib\VirtualEntity|boolean
-     */
-    public function fetchDefault()
-    {
-        return $this->prepareResult($this->pageMapper->fetchDefault());
-    }
-
-    /**
      * Updates page's SEO property by its associated id
      * 
      * @param array $pair
@@ -173,18 +191,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     public function makeDefault($id)
     {
         return $this->pageMapper->updateDefault((int) $id);
-    }
-
-    /**
-     * Fetches all page entities filtered by pagination
-     * 
-     * @param string $page Current page
-     * @param string $itemsPerPage Items per page count
-     * @return array
-     */
-    public function fetchAllByPage($page, $itemsPerPage)
-    {
-        return $this->prepareResults($this->pageMapper->fetchAllByPage($page, $itemsPerPage));
     }
 
     /**
@@ -288,22 +294,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
 
         $this->track('%s pages have been removed', count($ids));
         return true;
-    }
-
-    /**
-     * Fetches a record by its associated id
-     * 
-     * @param string $id
-     * @param boolean $withTranslations Whether to fetch translations
-     * @return \Krystal\Stdlib\VirtualEntity
-     */
-    public function fetchById($id, $withTranslations = false)
-    {
-        if ($withTranslations === true) {
-            return $this->prepareResults($this->pageMapper->fetchById($id, true));
-        } else {
-            return $this->prepareResult($this->pageMapper->fetchById($id, false));
-        }
     }
 
     /**
