@@ -78,17 +78,6 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
     }
 
     /**
-     * Fetches web page id by associated page id
-     * 
-     * @param string $id Page $id
-     * @return string
-     */
-    public function fetchWebPageIdByPageId($id)
-    {
-        return $this->findColumnByPk($id, 'web_page_id');
-    }
-
-    /**
      * Filters the raw input
      * 
      * @param array|\ArrayAccess $input Raw input data

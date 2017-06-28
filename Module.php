@@ -25,7 +25,7 @@ final class Module extends AbstractCmsModule
         $defaultMapper = $this->getMapper('/Pages/Storage/MySQL/DefaultMapper');
 
         return array(
-            'pageManager' => new PageManager($pageMapper, $defaultMapper, $this->getWebPageManager(), $this->getHistoryManager(), $this->getMenuWidget())
+            'pageManager' => new PageManager($pageMapper, $defaultMapper, $this->getWebPageManager(), $this->getHistoryManager())
         );
     }
 }

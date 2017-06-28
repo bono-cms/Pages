@@ -66,15 +66,12 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         PageMapperInterface $pageMapper, 
         DefaultMapperInterface $defaultMapper, 
         WebPageManagerInterface $webPageManager, 
-        HistoryManagerInterface $historyManager,
-        MenuWidgetInterface $menuWidget = null
+        HistoryManagerInterface $historyManager
     ){
         $this->pageMapper = $pageMapper;
         $this->defaultMapper = $defaultMapper;
         $this->webPageManager = $webPageManager;
         $this->historyManager = $historyManager;
-
-        $this->setMenuWidget($menuWidget);
     }
 
     /**
@@ -285,20 +282,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     /**
      * Deletes a page by its associated id
      * 
-     * @param string $id
-     * @return boolean
-     */
-    private function delete($id)
-    {
-        $webPageId = $this->pageMapper->fetchWebPageIdById($id);
-        $this->menuWidget->deleteAllByWebPageId($webPageId);
-
-        return $this->pageMapper->deletePage($id);
-    }
-
-    /**
-     * Deletes a page by its associated id
-     * 
      * @param string $id Page's id
      * @return boolean
      */
@@ -307,7 +290,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         // Gotta grab page's title, before removing it
         #$name = Filter::escape($this->pageMapper->fetchNameById($id));
 
-        if ($this->delete($id)) {
+        if ($this->pageMapper->deletePage($id)) {
             #$this->track('The page "%s" has been removed', $name);
             return true;
 
@@ -324,11 +307,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function deleteByIds(array $ids)
     {
-        foreach ($ids as $id) {
-            if (!$this->delete($id)) {
-                return false;
-            }
-        }
+        $this->pageMapper->deletePage($ids);
 
         $this->track('%s pages have been removed', count($ids));
         return true;
