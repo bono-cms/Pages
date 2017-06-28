@@ -31,11 +31,11 @@ final class Page extends AbstractController
     /**
      * Creates a form
      * 
-     * @param \Krystal\Stdlib\VirtualEntity $page
+     * @param \Krystal\Stdlib\VirtualEntity|array $page
      * @param string $title
      * @return string
      */
-    private function createForm(VirtualEntity $page, $title)
+    private function createForm($page, $title)
     {
         // Load view plugins
         $this->loadMenuWidget();
@@ -50,7 +50,8 @@ final class Page extends AbstractController
 
         return $this->view->render('page.form', array(
             'controllers' => $provider->getControllers(),
-            'page' => $page
+            'page' => $page,
+            'new' => is_object($page),
         ));
     }
 
@@ -76,7 +77,7 @@ final class Page extends AbstractController
      */
     public function editAction($id)
     {
-        $page = $this->getPageManager()->fetchById($id);
+        $page = $this->getPageManager()->fetchById($id, true);
 
         if ($page !== false) {
             return $this->createForm($page, 'Edit the page');
@@ -155,7 +156,7 @@ final class Page extends AbstractController
             )
         ));
 
-        if ($formValidator->isValid()) {
+        if (1) {
             $service = $this->getModuleService('pageManager');
 
             if (!empty($input['id'])) {
