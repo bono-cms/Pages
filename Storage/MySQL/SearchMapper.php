@@ -11,25 +11,44 @@
 
 namespace Pages\Storage\MySQL;
 
-use Search\Storage\MySQL\AbstractSearchProvider;
+use Cms\Storage\MySQL\AbstractMapper;
 use Krystal\Db\Sql\QueryBuilderInterface;
 
-final class SearchMapper extends AbstractSearchProvider
+final class SearchMapper extends AbstractMapper
 {
     /**
      * {@inheritDoc}
      */
     public function appendQuery(QueryBuilderInterface $queryBuilder, $placeholder)
     {
-        $queryBuilder->select($this->getWithDefaults(array('content')))
+        // Columns to be selected
+        $columns = array(
+            PageMapper::getFullColumnName('id'),
+            PageMapper::getFullColumnName('web_page_id', PageMapper::getTranslationTable()),
+            PageMapper::getFullColumnName('lang_id', PageMapper::getTranslationTable()),
+            PageMapper::getFullColumnName('title', PageMapper::getTranslationTable()),
+            PageMapper::getFullColumnName('content', PageMapper::getTranslationTable()),
+            PageMapper::getFullColumnName('name', PageMapper::getTranslationTable())
+        );
+
+        $queryBuilder->select($columns)
                      ->from(PageMapper::getTableName())
-                     ->whereEquals('seo', '1')
-                     ->andWhereEquals('lang_id', "'{$this->getLangId()}'")
+                     // Translation relation
+                     ->innerJoin(PageMapper::getTranslationTable())
+                     ->on()
+                     ->equals(
+                        PageMapper::getFullColumnName('id'),
+                        PageMapper::getFullColumnName('id', PageMapper::getTranslationTable())
+                     )
+                     // Filtering conditions
+                     ->whereEquals(PageMapper::getFullColumnName('seo'), '1')
+                     ->andWhereEquals(PageMapper::getFullColumnName('lang_id', PageMapper::getTranslationTable()), "'{$this->getLangId()}'")
                      ->rawAnd()
                      ->openBracket()
-                     ->like('title', $placeholder)
+                     // Search
+                     ->like(PageMapper::getFullColumnName('name', PageMapper::getTranslationTable()), $placeholder)
                      ->rawOr()
-                     ->like('content', $placeholder)
+                     ->like(PageMapper::getFullColumnName('content', PageMapper::getTranslationTable()), $placeholder)
                      ->closeBracket();
     }
 }
