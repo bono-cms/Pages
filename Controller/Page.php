@@ -76,7 +76,8 @@ final class Page extends AbstractController
 
         // There's no need to set 404 status code here, as its handled by the router internally
         return $this->view->render('pages-404', array(
-            'page' => $page
+            'page' => $page,
+            'languages' => $this->getService('Cms', 'languageManager')->fetchAll(true)
         ));
     }
 
@@ -96,7 +97,8 @@ final class Page extends AbstractController
             $this->view->getBreadcrumbBag()->clear();
 
             return $this->view->render('pages-home', array(
-                'page' => $page
+                'page' => $page,
+                'languages' => $this->getService('Cms', 'languageManager')->fetchAll(true)
             ));
 
         } else {
