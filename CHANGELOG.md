@@ -4,6 +4,7 @@ CHANGELOG
 1.4
 ---
 
+ * Ability to attach images
  * Support complete internalization
  * Removed menu widget
  * Compact form view in administration panel
