@@ -19,6 +19,7 @@ use Pages\Storage\DefaultMapperInterface;
 use Krystal\Security\Filter;
 use Krystal\Stdlib\ArrayUtils;
 use Krystal\Db\Filter\FilterableServiceInterface;
+use Krystal\Image\Tool\ImageManagerInterface;
 
 final class PageManager extends AbstractManager implements PageManagerInterface, FilterableServiceInterface
 {
@@ -44,21 +45,31 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     private $historyManager;
 
     /**
+     * Image handler
+     * 
+     * @var \Krystal\Image\Tool\ImageManagerInterface
+     */
+    private $imageManager;
+
+    /**
      * State initialization
      * 
      * @param \Page\Storage\PageMapperInterface $pageMapper
      * @param \Cms\Service\WebPageManagerInterface $webPageManager
      * @param \Cms\Service\HistoryManagerInterface $historyManager
+     * @param \Krystal\Image\Tool\ImageManagerInterface $imageManager
      * @return void
      */
     public function __construct(
         PageMapperInterface $pageMapper, 
         WebPageManagerInterface $webPageManager, 
-        HistoryManagerInterface $historyManager
+        HistoryManagerInterface $historyManager,
+        ImageManagerInterface $imageManager
     ){
         $this->pageMapper = $pageMapper;
         $this->webPageManager = $webPageManager;
         $this->historyManager = $historyManager;
+        $this->imageManager = $imageManager;
     }
 
     /**
@@ -154,8 +165,13 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     protected function toEntity(array $page)
     {
+        $imageBag = clone $this->imageManager->getImageBag();
+        $imageBag->setId($page['id'])
+                 ->setCover($page['image']);
+
         $entity = new PageEntity();
         $entity->setId($page['id'], PageEntity::FILTER_INT)
+                ->setImageBag($imageBag)
                 ->setLangId($page['lang_id'], PageEntity::FILTER_INT)
                 ->setWebPageId($page['web_page_id'], PageEntity::FILTER_INT)
                 ->setContent($page['content'], PageEntity::FILTER_SAFE_TAGS)
@@ -165,6 +181,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
                 ->setProtected($page['protected'], PageEntity::FILTER_BOOL)
                 ->setSeo($page['seo'], PageEntity::FILTER_BOOL)
                 ->setDefault($page['default'], PageEntity::FILTER_BOOL)
+                ->setImage($page['image'])
                 ->setUrl($this->webPageManager->surround($entity->getSlug(), $entity->getLangId()))
                 ->setPermanentUrl('/module/pages/'.$entity->getId())
 
@@ -233,9 +250,25 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     private function savePage(array $input)
     {
-        $data = ArrayUtils::arrayWithout($input['page'], array('controller', 'makeDefault', 'slug', 'menu'));
+        // References
+        $file =& $input['files']['file'];
+        $data =& $input['data'];
 
-        return $this->pageMapper->savePage('Pages', 'Pages:Page@indexAction', $data, $input['translation']);
+        // If image file is selected
+        if (!empty($file)) {
+            // Make names unique
+            $this->filterFileInput($file);
+
+            // And finally append
+            $data['page']['image'] = $file[0]->getName();
+        } else {
+            // Empty image
+            $data['page']['image'] = '';
+        }
+
+        $data['page'] = ArrayUtils::arrayWithout($data['page'], array('controller', 'makeDefault', 'slug', 'menu'));
+
+        return $this->pageMapper->savePage('Pages', 'Pages:Page@indexAction', $data['page'], $data['translation']);
     }
 
     /**
@@ -246,14 +279,23 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function add(array $input)
     {
+        // References
+        $file =& $input['files']['file'];
+        $data =& $input['data'];
+
         $this->savePage($input);
 
         // It was inserted successfully
         $id = $this->getLastId();
 
         // If checkbox was checked
-        if (isset($input['page']['makeDefault']) && $input['page']['makeDefault'] == '1') {
+        if (isset($data['page']['makeDefault']) && $data['page']['makeDefault'] == '1') {
             $this->makeDefault($id);
+        }
+
+        // If image file is selected
+        if (!empty($file)) {
+            $this->imageManager->upload($id, $file);
         }
 
         #$this->track('A new "%s" page has been created', $page['name']);
@@ -268,7 +310,22 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function update(array $input)
     {
+        // References
+        $file =& $input['files']['file'];
+        $data =& $input['data'];
+
         $this->savePage($input);
+
+        // If image file is selected
+        if (!empty($file)) {
+            // Remove previous image if any
+            if (!empty($data['page']['image'])) {
+                $this->imageManager->delete($data['page']['id']);
+            }
+
+            // Now upload new one
+            $this->imageManager->upload($data['page']['id'], $file);
+        }
 
         #$this->track('The page "%s" has been updated', $page['name']);
         return true;
@@ -284,6 +341,9 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     {
         // Gotta grab page's title, before removing it
         #$name = Filter::escape($this->pageMapper->fetchNameById($id));
+
+        // Remove image if any
+        $this->imageManager->delete($id);
 
         if ($this->pageMapper->deletePage($id)) {
             #$this->track('The page "%s" has been removed', $name);
@@ -302,6 +362,9 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function deleteByIds(array $ids)
     {
+        // Remove associated images if any
+        $this->imageManager->deleteMany($ids);
+
         $this->pageMapper->deletePage($ids);
 
         $this->track('%s pages have been removed', count($ids));

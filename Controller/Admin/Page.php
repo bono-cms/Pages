@@ -38,8 +38,7 @@ final class Page extends AbstractController
     private function createForm($page, $title)
     {
         // Load view plugins
-        $this->loadMenuWidget();
-        $this->view->getPluginBag()->load($this->getWysiwygPluginName())
+        $this->view->getPluginBag()->load(array('preview', $this->getWysiwygPluginName()))
                                    ->appendScript('@Pages/admin/page.form.js');
 
         // Append breadcrumbs
@@ -51,7 +50,7 @@ final class Page extends AbstractController
         return $this->view->render('page.form', array(
             'controllers' => $provider->getControllers(),
             'page' => $page,
-            'new' => is_object($page),
+            'new' => is_object($page)
         ));
     }
 
@@ -160,13 +159,13 @@ final class Page extends AbstractController
             $service = $this->getModuleService('pageManager');
 
             if (!empty($input['id'])) {
-                if ($service->update($this->request->getPost())) {
+                if ($service->update($this->request->getAll())) {
                     $this->flashBag->set('success', 'The element has been updated successfully');
                     return '1';
                 }
 
             } else {
-                if ($service->add($this->request->getPost())) {
+                if ($service->add($this->request->getAll())) {
                     $this->flashBag->set('success', 'The element has been created successfully');
                     return $service->getLastId();
                 }

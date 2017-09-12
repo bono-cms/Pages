@@ -13,9 +13,38 @@ namespace Pages;
 
 use Cms\AbstractCmsModule;
 use Pages\Service\PageManager;
+use Krystal\Image\Tool\ImageManager;
 
 final class Module extends AbstractCmsModule
 {
+    /**
+     * Returns album image manager
+     * 
+     * @return \Krystal\Image\Tool\ImageManager
+     */
+    private function createImageManager()
+    {
+        $plugins = array(
+            'thumb' => array(
+                'dimensions' => array(
+                    // Administration area
+                    array(350, 350)
+                )
+            ),
+
+            'original' => array(
+                'prefix' => 'original'
+            )
+        );
+
+        return new ImageManager(
+            '/data/uploads/module/pages',
+            $this->appConfig->getRootDir(),
+            $this->appConfig->getRootUrl(),
+            $plugins
+        );
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -24,7 +53,7 @@ final class Module extends AbstractCmsModule
         $pageMapper = $this->getMapper('/Pages/Storage/MySQL/PageMapper');
 
         return array(
-            'pageManager' => new PageManager($pageMapper, $this->getWebPageManager(), $this->getHistoryManager())
+            'pageManager' => new PageManager($pageMapper, $this->getWebPageManager(), $this->getHistoryManager(), $this->createImageManager())
         );
     }
 }

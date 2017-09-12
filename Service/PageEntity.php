@@ -16,6 +16,17 @@ use Krystal\Stdlib\VirtualEntity;
 final class PageEntity extends VirtualEntity
 {
     /**
+     * Returns image URL
+     * 
+     * @param string $size
+     * @return string
+     */
+    public function getImageUrl($size)
+    {
+        return $this->getImageBag()->getUrl($size);
+    }
+
+    /**
      * The alias to getDefault() 
      * 
      * @return boolean
