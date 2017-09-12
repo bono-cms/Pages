@@ -16,6 +16,16 @@ use Krystal\Stdlib\VirtualEntity;
 final class PageEntity extends VirtualEntity
 {
     /**
+     * Checks whether page has image
+     * 
+     * @return boolean
+     */
+    public function hasImage()
+    {
+        return $this->getImage() != '';
+    }
+
+    /**
      * Returns image URL
      * 
      * @param string $size
