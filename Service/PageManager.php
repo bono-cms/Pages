@@ -80,11 +80,12 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      * @param integer $itemsPerPage Items per page to be displayed
      * @param string $sortingColumn Column name to be sorted
      * @param string $desc Whether to sort in DESC order
+     * @param array $parameters
      * @return array
      */
-    public function filter($input, $page, $itemsPerPage, $sortingColumn, $desc)
+    public function filter($input, $page, $itemsPerPage, $sortingColumn, $desc, array $parameters = array())
     {
-        return $this->prepareResults($this->pageMapper->filter($input, $page, $itemsPerPage, $sortingColumn, $desc));
+        return $this->prepareResults($this->pageMapper->filter($input, $page, $itemsPerPage, $sortingColumn, $desc, $parameters));
     }
 
     /**
