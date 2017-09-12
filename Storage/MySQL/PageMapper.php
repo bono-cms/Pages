@@ -47,6 +47,7 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
             self::getFullColumnName('id'),
             self::getFullColumnName('template'),
             self::getFullColumnName('protected'),
+            self::getFullColumnName('image'),
             self::getFullColumnName('seo'),
             self::getFullColumnName('default'),
             PageTranslationMapper::getFullColumnName('lang_id'),

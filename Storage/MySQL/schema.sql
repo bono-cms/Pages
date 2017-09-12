@@ -6,7 +6,8 @@ CREATE TABLE `bono_module_pages` (
 	`template` varchar(32) NOT NULL COMMENT 'Template override',
 	`protected` varchar(1) NOT NULL COMMENT 'Whether this page is allowed to be removed in simple mode',
 	`seo` varchar(1) NOT NULL COMMENT 'Whether it should be indexed in SEO',
-    `default` varchar(1) NOT NULL COMMENT 'Whether this page is considered default'
+    `default` varchar(1) NOT NULL COMMENT 'Whether this page is considered default',
+    `image` varchar(30) NOT NULL COMMENT 'Attached page image'
 
 ) DEFAULT CHARSET = UTF8;
 
