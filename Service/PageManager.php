@@ -256,17 +256,12 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
 
         // If image file is selected
         if (!empty($file)) {
-            // Make names unique
-            $this->filterFileInput($file);
-
             // And finally append
             $data['page']['image'] = $file[0]->getName();
-        } else {
-            // Empty image
-            $data['page']['image'] = '';
         }
 
-        $data['page'] = ArrayUtils::arrayWithout($data['page'], array('controller', 'makeDefault', 'slug', 'menu'));
+        // Keep only page related attributes
+        $data['page'] = ArrayUtils::arrayWithout($data['page'], array('controller', 'makeDefault', 'slug', 'menu', 'remove_cover'));
 
         return $this->pageMapper->savePage('Pages', 'Pages:Page@indexAction', $data['page'], $data['translation']);
     }
@@ -282,6 +277,11 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         // References
         $file =& $input['files']['file'];
         $data =& $input['data'];
+
+        if (!empty($file)) {
+            // Make names unique
+            $this->filterFileInput($file);
+        }
 
         $this->savePage($input);
 
@@ -313,19 +313,29 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         // References
         $file =& $input['files']['file'];
         $data =& $input['data'];
+        $page =& $data['page'];
+
+        // Allow to remove a cover, only it case it exists and checkbox was checked
+        if (isset($page['remove_cover']) && !empty($page['image'])) {
+            $this->imageManager->delete($page['id']);
+            $page['image'] = '';
+        } else {
+            // If image file is selected
+            if (!empty($file)) {
+                // Remove previous image if any
+                if (!empty($page['image'])) {
+                    $this->imageManager->delete($page['id']);
+                }
+
+                // Make names unique
+                $this->filterFileInput($file);
+
+                // Now upload a new one
+                $this->imageManager->upload($page['id'], $file);
+            }
+        }
 
         $this->savePage($input);
-
-        // If image file is selected
-        if (!empty($file)) {
-            // Remove previous image if any
-            if (!empty($data['page']['image'])) {
-                $this->imageManager->delete($data['page']['id']);
-            }
-
-            // Now upload new one
-            $this->imageManager->upload($data['page']['id'], $file);
-        }
 
         #$this->track('The page "%s" has been updated', $page['name']);
         return true;

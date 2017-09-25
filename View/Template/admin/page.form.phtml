@@ -92,6 +92,7 @@ defined('KRYSTAL') or die;
         <div role="tabpanel" class="tab-pane" id="configuration">
             <div class="well">
                 <?php echo Element::hidden('page[id]', $entity->getId()); ?>
+                <?php echo Element::hidden('page[image]', $entity->getImage()); ?>
 
                 <?php if (!$extendedMode): ?>
                 <div class="hidden">
@@ -145,8 +146,13 @@ defined('KRYSTAL') or die;
 					<label class="col-lg-2 control-label"><?php $this->show('Image'); ?></label>
 					<div class="col-lg-10">
 
-                        <?php if ($entity->getImage() != ''): ?>
+                        <?php if ($entity->hasImage()): ?>
                         <p><img class="img-responsive" src="<?php echo $entity->getImageUrl('350x350'); ?>" /></p>
+                        <p>
+                            <label for="removeCover"><?php $this->show('Remove this cover'); ?>&nbsp;</label>
+                            <input type="checkbox" id="removeCover" name="page[remove_cover]" data-toggle="tooltip" data-placement="left" title="<?php $this->show('Check it if you want to remove this cover'); ?>" />
+                        </p>
+
 						<?php else: ?>
                         <p><img data-image="preview" /></p>
 
