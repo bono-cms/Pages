@@ -49,8 +49,7 @@ final class Page extends AbstractController
 
         return $this->view->render('page.form', array(
             'controllers' => $provider->getControllers(),
-            'page' => $page,
-            'new' => is_object($page)
+            'page' => $page
         ));
     }
 
