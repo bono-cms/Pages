@@ -76,11 +76,16 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      * Returns a collection of switching URLs
      * 
      * @param string $id Page ID
+     * @param string $controller Optionally can be overridden
      * @return array
      */
-    public function getSwitchUrls($id)
+    public function getSwitchUrls($id, $controller = null)
     {
-        return $this->pageMapper->createSwitchUrls($id, 'Pages', 'Pages:Page@indexAction');
+        if (is_null($controller)) {
+            $controller = 'Pages:Page@indexAction';
+        }
+
+        return $this->pageMapper->createSwitchUrls($id, 'Pages', $controller);
     }
 
     /**

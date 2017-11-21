@@ -18,9 +18,10 @@ interface PageManagerInterface
      * Returns a collection of switching URLs
      * 
      * @param string $id Page ID
+     * @param string $controller Optionally can be overridden
      * @return array
      */
-    public function getSwitchUrls($id);
+    public function getSwitchUrls($id, $controller = null);
 
     /**
      * Fetches default page bag
