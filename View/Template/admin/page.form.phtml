@@ -126,7 +126,7 @@ defined('KRYSTAL') or die;
                 </div>
                 <?php endif; ?>
 
-                <?php if ($new): ?>
+                <?php if (!$entity->getId()): ?>
                 <div class="form-group">
                     <label class="col-lg-2 control-label"><?php $this->show('Make default'); ?></label>
                     <div class="col-lg-10">
@@ -153,7 +153,7 @@ defined('KRYSTAL') or die;
                             <input type="checkbox" id="removeCover" name="page[remove_cover]" data-toggle="tooltip" data-placement="left" title="<?php $this->show('Check it if you want to remove this cover'); ?>" />
                         </p>
 
-						<?php else: ?>
+                        <?php else: ?>
                         <p><img data-image="preview" /></p>
 
                         <?php endif; ?>
