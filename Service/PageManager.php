@@ -280,13 +280,8 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     public function add(array $input)
     {
         // References
-        $file =& $input['files']['file'];
+        $file = isset($input['files']['file']) ? $input['files']['file'] : false;
         $data =& $input['data'];
-
-        if (!empty($file)) {
-            // Make names unique
-            $this->filterFileInput($file);
-        }
 
         $this->savePage($input);
 
@@ -299,7 +294,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         }
 
         // If image file is selected
-        if (!empty($file)) {
+        if ($file) {
             $this->imageManager->upload($id, $file);
         }
 
@@ -316,7 +311,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     public function update(array $input)
     {
         // References
-        $file =& $input['files']['file'];
+        $file = isset($input['files']['file']) ? $input['files']['file'] : false;
         $data =& $input['data'];
         $page =& $data['page'];
 
@@ -326,14 +321,11 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
             $page['image'] = '';
         } else {
             // If image file is selected
-            if (!empty($file)) {
+            if ($file) {
                 // Remove previous image if any
                 if (!empty($page['image'])) {
                     $this->imageManager->delete($page['id']);
                 }
-
-                // Make names unique
-                $this->filterFileInput($file);
 
                 // Now upload a new one
                 $this->imageManager->upload($page['id'], $file);
