@@ -13,6 +13,7 @@ namespace Pages\Controller\Admin;
 
 use Krystal\Validate\Pattern;
 use Krystal\Stdlib\VirtualEntity;
+use Pages\Service\PageEntity;
 use Cms\Controller\Admin\AbstractController;
 use Pages\Service\ControllerProvider;
 
@@ -60,7 +61,7 @@ final class Page extends AbstractController
      */
     public function addAction()
     {
-        $page = new VirtualEntity();
+        $page = new PageEntity();
         $page->setSeo(true)
              ->setController('Pages:Page@indexAction');
 
