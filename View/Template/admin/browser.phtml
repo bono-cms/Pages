@@ -55,7 +55,6 @@ defined('KRYSTAL') or die;
                 array(
                     'column' => 'seo',
                     'label' => 'SEO',
-                    'filter' => true,
                     'type' => 'select',
                     'value' => function($row){
                         return Element::checkbox(sprintf('seo[%s]', $row['id']), $row['seo']);
