@@ -12,7 +12,6 @@
 namespace Pages\Controller\Admin;
 
 use Cms\Controller\Admin\AbstractController;
-use Krystal\Db\Filter\QueryContainer;
 
 final class Browser extends AbstractController
 {
@@ -46,9 +45,11 @@ final class Browser extends AbstractController
         }
 
         return $this->view->render('browser', array(
+            'query' => $this->request->getQuery(),
+            'route' => $this->createUrl('Pages:Admin:Browser@filterAction', array(null)),
             'paginator' => $paginator,
             'pages' => $pages,
-            'filter' => new QueryContainer($this->request->getQuery(), $this->createUrl('Pages:Admin:Browser@filterAction', array(null))),
+            'filterApplied' => $this->request->getQuery('filter', false)
         ));
     }
 
