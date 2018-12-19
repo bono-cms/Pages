@@ -105,6 +105,14 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
      */
     public function filter($input, $page, $itemsPerPage, $sortingColumn, $desc)
     {
+        $sortingColumns = array(
+            'seo' => self::column('seo'),
+            'name' => PageTranslationMapper::column('name')
+        );
+
+        // Current sorting column
+        $sortingColumn = isset($sortingColumn[$sortingColumn]) ? $sortingColumn[$sortingColumn] : self::column($this->getPk());
+
         if (!$sortingColumn) {
             $sortingColumn = $this->getPk();
         }
@@ -121,7 +129,7 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
                     )
                     ->andWhereEquals(self::column($this->getPk()), $input['id'], true)
                     ->andWhereEquals(self::column('seo'), $input['seo'], true)
-                    ->orderBy(self::column($sortingColumn));
+                    ->orderBy($sortingColumn);
 
         if ($desc) {
             $db->desc();
