@@ -4,6 +4,7 @@ CHANGELOG
 1.4
 ---
 
+ * Disabled autocomplete in forms
  * Ability to attach images
  * Support complete internalization
  * Removed menu widget

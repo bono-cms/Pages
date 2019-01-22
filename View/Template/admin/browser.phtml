@@ -31,7 +31,7 @@ defined('KRYSTAL') or die;
 
 <?php $this->loadPartial('items-per-page', array('caption' => 'Pages')); ?>
 
-<form action="<?php echo $this->url('Pages:Admin:Browser@filterAction', null); ?>">
+<form action="<?php echo $this->url('Pages:Admin:Browser@filterAction', null); ?>" autocomplete="off">
 	<div class="table-responsive">
         <?= Grid::render($pages, array(
             // A column to be considered as a primary key
