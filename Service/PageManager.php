@@ -262,7 +262,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         // If image file is selected
         if (!empty($file)) {
             // And finally append
-            $data['page']['image'] = $file[0]->getName();
+            $data['page']['image'] = $file->getUniqueName();
         }
 
         // Keep only page related attributes
