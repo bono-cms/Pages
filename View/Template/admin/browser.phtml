@@ -1,7 +1,7 @@
 <?php
 
 use Krystal\Form\Element;
-use Krystal\Grid\Grid;
+use Krystal\Widget\GridWidget;
 use Cms\View\Icon;
 
 defined('KRYSTAL') or die;
@@ -32,8 +32,8 @@ defined('KRYSTAL') or die;
 <?php $this->loadPartial('items-per-page', array('caption' => 'Pages')); ?>
 
 <form action="<?php echo $this->url('Pages:Admin:Browser@filterAction', null); ?>" autocomplete="off">
-	<div class="table-responsive">
-        <?= Grid::render($pages, array(
+    <div class="table-responsive">
+        <?= $this->widget(new GridWidget($pages, array(
             // A column to be considered as a primary key
             'pk' => 'id',
             'batch' => true,
@@ -95,10 +95,10 @@ defined('KRYSTAL') or die;
                 }
             )
 
-        ), $this->translator, $route, $query); ?>
-        
+        ), $route)); ?>
+
 		<br />
-		
+
 		<?php if (!empty($pages)): ?>
 		<div>
 			<?php if ($filterApplied): ?>
