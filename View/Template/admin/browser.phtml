@@ -1,7 +1,7 @@
 <?php
 
 use Krystal\Form\Element;
-use Krystal\Widget\GridWidget;
+use Krystal\Widget\GridView\GridViewWidget;
 use Cms\View\Icon;
 
 defined('KRYSTAL') or die;
@@ -33,7 +33,7 @@ defined('KRYSTAL') or die;
 
 <form action="<?php echo $this->url('Pages:Admin:Browser@filterAction', null); ?>" autocomplete="off">
     <div class="table-responsive">
-        <?= $this->widget(new GridWidget($pages, array(
+        <?= $this->widget(new GridViewWidget($pages, array(
             // A column to be considered as a primary key
             'pk' => 'id',
             'batch' => true,
