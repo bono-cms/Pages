@@ -12,7 +12,7 @@ return array(
         array(
             'name' => 'Add new page',
             'controller' => 'Pages:Admin:Page@addAction',
-            'icon' => 'glyphicon glyphicon-file'
+            'icon' => 'fas fa-file-signature'
         )
     ),
     'menu' => array(
