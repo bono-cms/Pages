@@ -9,36 +9,42 @@ defined('KRYSTAL') or die;
 ?>
 
 <form action="<?php echo $this->url('Pages:Admin:Browser@filterAction', null); ?>" autocomplete="off">
+    <div class="btn-toolbar">
+        <div class="btn-group mr-2">
+          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <i class="glyphicon glyphicon-list"></i> <?php $this->show('Menu'); ?></span>
+          </button>
+
+          <div class="dropdown-menu">
+             <a class="dropdown-item" href="<?php echo $this->url('Pages:Admin:Page@addAction'); ?>"><i class="glyphicon glyphicon-file"></i> <?php $this->show('Add new page'); ?></a>
+             <div class="dropdown-divider"></div>
+             <div class="dropdown-header"><?php $this->show('Actions'); ?></div>
+             <?php if (!empty($pages)): ?>
+             <a class="dropdown-item" href="#" data-button="save-changes" data-url="<?php echo $this->url('Pages:Admin:Page@tweakAction'); ?>"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Save changes'); ?></a>
+             <a class="dropdown-item" href="#" data-button="remove-selected" data-url="<?php echo $this->url('Pages:Admin:Page@deleteAction', null); ?>"><i class="glyphicon glyphicon-remove"></i> <?php $this->show('Remove selected'); ?></a>
+             <?php else: ?>
+             <a class="dropdown-item"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Save changes'); ?></a>
+             <a class="dropdown-item"><i class="glyphicon glyphicon-remove"></i> <?php $this->show('Remove selected'); ?></a>
+             <?php endif; ?>
+          </div>
+        </div>
+
+        <?php if ($filterApplied): ?>
+        <div class="btn-group mr-2">
+            <a href="<?php echo $this->url('Pages:Admin:Browser@indexAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-trash"></i> <?php $this->show('Reset filter'); ?></a>
+        </div>
+        <?php endif; ?>
+
+        <div class="btn-group mr-2">
+            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> <?php $this->show('Filter'); ?></button>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header">
             <?php $this->loadPartial('items-per-page', array('caption' => 'Pages')); ?>
         </div>
 
-        <div class="btn-toolbar">
-            <div class="btn-group">
-              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicon glyphicon-list"></i> <?php $this->show('Menu'); ?></span>
-              </button>
-
-              <div class="dropdown-menu">
-                 <a class="dropdown-item" href="<?php echo $this->url('Pages:Admin:Page@addAction'); ?>"><i class="glyphicon glyphicon-file"></i> <?php $this->show('Add new page'); ?></a>
-                 <div class="dropdown-divider"></div>
-                 <div class="dropdown-header"><?php $this->show('Actions'); ?></div>
-                 <?php if (!empty($pages)): ?>
-                 <a class="dropdown-item" href="#" data-button="save-changes" data-url="<?php echo $this->url('Pages:Admin:Page@tweakAction'); ?>"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Save changes'); ?></a>
-                 <a class="dropdown-item" href="#" data-button="remove-selected" data-url="<?php echo $this->url('Pages:Admin:Page@deleteAction', null); ?>"><i class="glyphicon glyphicon-remove"></i> <?php $this->show('Remove selected'); ?></a>
-                 <?php else: ?>
-                 <a class="dropdown-item"><i class="glyphicon glyphicon-floppy-save"></i> <?php $this->show('Save changes'); ?></a>
-                 <a class="dropdown-item"><i class="glyphicon glyphicon-remove"></i> <?php $this->show('Remove selected'); ?></a>
-                 <?php endif; ?>
-              </div>
-            </div>
-
-            <?php if ($filterApplied): ?>
-            <a href="<?php echo $this->url('Pages:Admin:Browser@indexAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-trash"></i> <?php $this->show('Reset filter'); ?></a>
-            <?php endif; ?>
-            <button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-filter"></i> <?php $this->show('Filter'); ?></button>
-        </div>
 
         <div class="table-responsive">
             <?= $this->widget(new GridViewWidget($pages, array(
