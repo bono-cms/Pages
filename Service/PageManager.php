@@ -265,10 +265,13 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
             $data['page']['image'] = $file->getUniqueName();
         }
 
+        // Use explicit controller if provided, otherwise fall back to default one
+        $controller = isset($data['page']['controller']) ? $data['page']['controller'] : 'Pages:Page@indexAction';
+
         // Keep only page related attributes
         $data['page'] = ArrayUtils::arrayWithout($data['page'], array('controller', 'makeDefault', 'slug', 'menu', 'remove_cover'));
 
-        return $this->pageMapper->savePage('Pages', 'Pages:Page@indexAction', $data['page'], $data['translation']);
+        return $this->pageMapper->savePage('Pages', $controller, $data['page'], $data['translation']);
     }
 
     /**
