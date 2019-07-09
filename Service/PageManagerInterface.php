@@ -31,15 +31,6 @@ interface PageManagerInterface
     public function fetchDefault();
 
     /**
-     * Fetches all pages filtered by pagination
-     * 
-     * @param string $page Current page
-     * @param string $itemsPerPage Items per page count
-     * @return array
-     */
-    public function fetchAllByPage($page, $itemsPerPage);
-
-    /**
      * Fetches a record by its associated id
      * 
      * @param string $id

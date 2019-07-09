@@ -31,15 +31,6 @@ interface PageMapperInterface
     public function updateSeoById($id, $seo);
 
     /**
-     * Fetches all pages filtered by pagination
-     * 
-     * @param string $page Current page id
-     * @param string $itemsPerPage Per page count
-     * @return array
-     */
-    public function fetchAllByPage($page, $itemsPerPage);
-
-    /**
      * Fetches default page
      * 
      * @return array

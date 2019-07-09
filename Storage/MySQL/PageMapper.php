@@ -16,7 +16,6 @@ use Cms\Storage\MySQL\WebPageMapper;
 use Cms\Contract\WebPageMapperAwareInterface;
 use Pages\Storage\PageMapperInterface;
 use Krystal\Db\Sql\RawSqlFragment;
-use Krystal\Db\Filter\InputDecorator;
 
 final class PageMapper extends AbstractMapper implements PageMapperInterface, WebPageMapperAwareInterface
 {
@@ -137,18 +136,6 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
 
         return $db->paginate($page, $itemsPerPage)
                   ->queryAll();
-    }
-
-    /**
-     * Fetches all pages filtered by pagination
-     * 
-     * @param string $page Current page id
-     * @param string $itemsPerPage Per page count
-     * @return array
-     */
-    public function fetchAllByPage($page, $itemsPerPage)
-    {
-        return $this->filter(new InputDecorator(), $page, $itemsPerPage, false, true);
     }
 
     /**

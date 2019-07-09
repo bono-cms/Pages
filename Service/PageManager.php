@@ -138,18 +138,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     }
 
     /**
-     * Fetches all page entities filtered by pagination
-     * 
-     * @param string $page Current page
-     * @param string $itemsPerPage Items per page count
-     * @return array
-     */
-    public function fetchAllByPage($page, $itemsPerPage)
-    {
-        return $this->prepareResults($this->pageMapper->fetchAllByPage($page, $itemsPerPage));
-    }
-
-    /**
      * Fetches a record by its associated id
      * 
      * @param string $id
