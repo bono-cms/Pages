@@ -15,7 +15,7 @@ return array(
     ),
 
     '/%s/module/pages' => array(
-        'controller' => 'Admin:Browser@indexAction',
+        'controller' => 'Admin:Page@indexAction',
     ),
 
     '/%s/module/pages/delete/(:var)' => array(

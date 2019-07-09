@@ -43,7 +43,7 @@ final class Page extends AbstractController
                                    ->appendScript('@Pages/admin/page.form.js');
 
         // Append breadcrumbs
-        $this->view->getBreadcrumbBag()->addOne('Pages', 'Pages:Admin:Browser@indexAction')
+        $this->view->getBreadcrumbBag()->addOne('Pages', 'Pages:Admin:Page@indexAction')
                                        ->addOne($title);
 
         $provider = new ControllerProvider($this->moduleManager->getRoutes());
@@ -51,6 +51,29 @@ final class Page extends AbstractController
         return $this->view->render('page.form', array(
             'controllers' => $provider->getControllers(),
             'page' => $page
+        ));
+    }
+
+    /**
+     * Renders a grid
+     * 
+     * @return string
+     */
+    public function indexAction()
+    {
+        // Append a breadcrumb
+        $this->view->getBreadcrumbBag()
+                   ->addOne('Pages');
+
+        $service = $this->getModuleService('pageManager');
+        $pages = $this->getFilter($service);
+
+
+        return $this->view->render('browser', array(
+            'query' => $this->request->getQuery(),
+            'paginator' => $service->getPaginator(),
+            'pages' => $pages,
+            'filterApplied' => $this->request->getQuery('filter', false)
         ));
     }
 
