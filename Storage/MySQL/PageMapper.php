@@ -111,7 +111,7 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
         );
 
         // Current sorting column
-        $sortingColumn = isset($sortingColumn[$sortingColumn]) ? $sortingColumn[$sortingColumn] : self::column($this->getPk());
+        $sortingColumn = isset($sortingColumns[$sortingColumn]) ? $sortingColumns[$sortingColumn] : self::column($this->getPk());
 
         if (!$sortingColumn) {
             $sortingColumn = $this->getPk();
