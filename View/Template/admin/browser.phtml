@@ -8,7 +8,7 @@ defined('KRYSTAL') or die;
 
 ?>
 
-<form action="<?php echo $this->url('Pages:Admin:Browser@filterAction', null); ?>" autocomplete="off">
+<form autocomplete="off">
     <div class="btn-toolbar">
         <div class="btn-group mr-2">
             <?php $this->loadPartial('menu', array(
@@ -108,7 +108,7 @@ defined('KRYSTAL') or die;
                     }
                 )
 
-            ), $route)); ?>
+            ))); ?>
 
             <br />
 

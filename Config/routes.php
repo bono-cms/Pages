@@ -14,18 +14,10 @@ return array(
         'controller' => 'Page@indexAction'
     ),
 
-    '/%s/module/pages/filter/(:var)' => array(
-        'controller' => 'Admin:Browser@filterAction'
-    ),
-    
     '/%s/module/pages' => array(
         'controller' => 'Admin:Browser@indexAction',
     ),
-    
-    '/%s/module/pages/browse/(:var)' => array(
-        'controller' => 'Admin:Browser@indexAction'
-    ),
-    
+
     '/%s/module/pages/delete/(:var)' => array(
         'controller' => 'Admin:Page@deleteAction',
         'disallow' => array('guest')
