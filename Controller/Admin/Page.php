@@ -68,8 +68,7 @@ final class Page extends AbstractController
         $service = $this->getModuleService('pageManager');
         $pages = $this->getFilter($service);
 
-
-        return $this->view->render('browser', array(
+        return $this->view->render('index', array(
             'query' => $this->request->getQuery(),
             'paginator' => $service->getPaginator(),
             'pages' => $pages,
