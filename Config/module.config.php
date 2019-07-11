@@ -20,7 +20,7 @@ return array(
         'icon' => 'fas fa-file-signature',
         'items' => array(
             array(
-                'route' => 'Pages:Admin:Browser@indexAction',
+                'route' => 'Pages:Admin:Page@indexAction',
                 'name' => 'View all pages'
             ),
             array(
