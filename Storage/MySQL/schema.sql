@@ -27,6 +27,15 @@ CREATE TABLE `bono_module_pages_translations` (
 
 
 /* Extra fields */
+DROP TABLE IF EXISTS `bono_module_pages_extra_fields_cat_rel`;
+CREATE TABLE `bono_module_pages_extra_fields_cat_rel` (
+    `master_id` INT NOT NULL COMMENT 'Page ID',
+    `slave_id` INT NOT NULL COMMENT 'Category ID',
+
+    FOREIGN KEY (master_id) REFERENCES bono_module_pages(id) ON DELETE CASCADE,
+    FOREIGN KEY (slave_id) REFERENCES bono_module_block_categories(id) ON DELETE CASCADE
+);
+
 DROP TABLE IF EXISTS `bono_module_pages_extra_fields`;
 CREATE TABLE `bono_module_pages_extra_fields` (
 
