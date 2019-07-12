@@ -25,6 +25,7 @@ final class Dropper extends AbstractStorageDropper
             PageTranslationMapper::getTableName(),
 
             // Extra fields
+            PageExtraFieldRelation::getTableName(),
             PageExtraFieldMapper::getTableName(),
             PageExtraFieldTranslationMapper::getTableName()
         );
