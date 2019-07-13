@@ -12,7 +12,9 @@ defined('KRYSTAL') or die;
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="nav-item active"><a class="nav-link" href="#page" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-file"></i> <?php $this->show('Page'); ?></a></li>
         <li role="presentation" class="nav-item"><a class="nav-link" href="#configuration" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-th-list"></i> <?php $this->show('Configuration'); ?></a></li>
+        <?php if (!empty($fields)): ?>
         <li role="presentation" class="nav-item"><a class="nav-link" href="#fields" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-th-list"></i> <?php $this->show('Extra fields'); ?></a></li>
+        <?php endif; ?>
     </ul>
 
     <div class="tab-content">
@@ -171,6 +173,7 @@ defined('KRYSTAL') or die;
             </div>
         </div>
 
+        <?php if (!empty($fields)): ?>
         <div role="tabpanel" class="tab-pane" id="fields">
             <?php foreach ($fields as $category => $items): ?>
               <fieldset>
@@ -207,6 +210,7 @@ defined('KRYSTAL') or die;
               </fieldset>
             <?php endforeach; ?>
         </div>
+        <?php endif; ?>
 	</div>
 
     <?php $this->loadPartial('actions', array(
