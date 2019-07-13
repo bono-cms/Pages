@@ -46,6 +46,9 @@ final class Page extends AbstractController
                            ->clear();
             }
 
+            // Append fields on demand
+            $this->appendFieldsIfPossible($page);
+
             return $this->view->render($this->grabTemplateName($page), array(
                 'page' => $page,
                 'languages' => $this->getPageManager()->getSwitchUrls($id)
@@ -96,6 +99,9 @@ final class Page extends AbstractController
             // Clear all breadcrumbs
             $this->view->getBreadcrumbBag()->clear();
 
+            // Append fields if possible
+            $this->appendFieldsIfPossible($page);
+
             return $this->view->render('pages-home', array(
                 'page' => $page,
                 'languages' => $this->getService('Cms', 'languageManager')->fetchAll(true)
@@ -104,6 +110,19 @@ final class Page extends AbstractController
         } else {
             // Returning false from a controller's action triggers 404 error automatically
             return false;
+        }
+    }
+
+    /**
+     * Append fields on demand
+     * 
+     * @param object $page
+     * @return void
+     */
+    private function appendFieldsIfPossible($page)
+    {
+        if ($this->moduleManager->isLoaded('Block')) {
+            $this->getModuleService('fieldService')->appendFields($page);
         }
     }
 

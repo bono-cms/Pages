@@ -38,6 +38,11 @@ final class Page extends AbstractController
      */
     private function createForm($page, $title)
     {
+        $new = is_object($page);
+
+        // Grab current id
+        $id = !$new ? $page[0]->getId() : $page->getId();
+
         // Load view plugins
         $this->view->getPluginBag()->load(array('preview', $this->getWysiwygPluginName()))
                                    ->appendScript('@Pages/admin/page.form.js');
@@ -50,7 +55,12 @@ final class Page extends AbstractController
 
         return $this->view->render('page.form', array(
             'controllers' => $provider->getControllers(),
-            'page' => $page
+            'page' => $page,
+
+            // Extra fields
+            'blockCategories' => $this->getService('Block', 'categoryService')->fetchList(),
+            'activeBlockCategoryIds' => !$new ? $this->getModuleService('fieldService')->getAttachedCategories($id) : array(),
+            'fields' => !$new ? $this->getModuleService('fieldService')->getFields($id) : array()
         ));
     }
 
@@ -166,6 +176,9 @@ final class Page extends AbstractController
      */
     public function saveAction()
     {
+        // Save dynamic fields, if present
+        $this->saveFields('page');
+
         $input = $this->request->getPost('page');
 
         $formValidator = $this->createValidator(array(
