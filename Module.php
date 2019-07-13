@@ -14,6 +14,7 @@ namespace Pages;
 use Cms\AbstractCmsModule;
 use Pages\Service\PageManager;
 use Krystal\Image\Tool\ImageManager;
+use Block\Service\FieldService;
 
 final class Module extends AbstractCmsModule
 {
@@ -53,7 +54,8 @@ final class Module extends AbstractCmsModule
         $pageMapper = $this->getMapper('/Pages/Storage/MySQL/PageMapper');
 
         return array(
-            'pageManager' => new PageManager($pageMapper, $this->getWebPageManager(), $this->getHistoryManager(), $this->createImageManager())
+            'pageManager' => new PageManager($pageMapper, $this->getWebPageManager(), $this->getHistoryManager(), $this->createImageManager()),
+            'fieldService' => new FieldService($this->getMapper('\Pages\Storage\MySQL\PageExtraFieldMapper'))
         );
     }
 }
