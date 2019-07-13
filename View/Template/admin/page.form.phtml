@@ -177,7 +177,7 @@ defined('KRYSTAL') or die;
         <div role="tabpanel" class="tab-pane" id="fields">
             <?php foreach ($fields as $category => $items): ?>
               <fieldset>
-                <legend><?= $category; ?></legend>
+                <legend class="container"><?= $category; ?></legend>
 
                 <?php foreach ($items as $item): ?>
                 <div class="form-group">
@@ -197,7 +197,7 @@ defined('KRYSTAL') or die;
                         <?php endif; ?>
 
                         <?php if (FieldTypeCollection::TYPE_BOOLEAN == $item['type']): ?>
-                        <?= Element::checkbox(sprintf('field[%s]', $item['id']), $item['value'], array('class' => 'form-control')); ?>
+                        <?= Element::checkbox(sprintf('field[%s]', $item['id']), $item['value'], array('class' => '--form-control')); ?>
                         <?php endif; ?>
 
                         <?php if (FieldTypeCollection::TYPE_WYSIWYG == $item['type']): ?>
