@@ -188,7 +188,7 @@ defined('KRYSTAL') or die;
                         <?= Element::text(sprintf('field[%s]', $item['id']), $item['value'], array('class' => 'form-control')); ?>
                         <?php endif; ?>
 
-                        <?php if (FieldTypeCollection::TYPE_TEXTAREA == $item['type']): ?>
+                        <?php if (FieldTypeCollection::TYPE_TEXTAREA == $item['type'] || FieldTypeCollection::TYPE_ARRAY == $item['type']): ?>
                         <?= Element::textarea(sprintf('field[%s]', $item['id']), $item['value'], array('class' => 'form-control')); ?>
                         <?php endif; ?>
 
