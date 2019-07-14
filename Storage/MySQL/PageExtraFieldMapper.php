@@ -35,6 +35,32 @@ final class PageExtraFieldMapper extends AbstractMapper implements SharedFieldIn
     }
 
     /**
+     * Find field translation by associated page id
+     * 
+     * @param int $id Page id
+     * @return array
+     */
+    public function findTranslationsByPageId($id)
+    {
+        // Columns to be selected
+        $columns = array(
+            PageExtraFieldMapper::column('field_id'),
+            PageExtraFieldTranslationMapper::column('lang_id'),
+            PageExtraFieldTranslationMapper::column('value')
+        );
+        
+        $db = $this->db->select($columns)
+                       ->from(PageExtraFieldMapper::getTableName())
+                       // Translation relation
+                       ->leftJoin(PageExtraFieldTranslationMapper::getTableName(), array(
+                            PageExtraFieldTranslationMapper::column('id') => PageExtraFieldMapper::getRawColumn('id')
+                       ))
+                       ->whereEquals(PageExtraFieldMapper::column('page_id'), $id);
+
+        return $db->queryAll();
+    }
+
+    /**
      * Find attached fields by page id
      * 
      * @param int $id
