@@ -108,10 +108,11 @@ final class Page extends AbstractController
      */
     public function editAction($id)
     {
-        $page = $this->getPageManager()->fetchById($id, true);
+        $pages = $this->getPageManager()->fetchById($id, true);
 
-        if ($page !== false) {
-            return $this->createForm($page, 'Edit the page');
+        if ($pages !== false) {
+            $name = $this->getCurrentProperty($pages, 'name');
+            return $this->createForm($pages, $this->translator->translate('Edit the page "%s"', $name));
         } else {
             return false;
         }
