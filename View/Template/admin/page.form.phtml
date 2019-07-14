@@ -2,7 +2,7 @@
 
 use Krystal\Form\Element;
 use Cms\Service\LanguageManager;
-use Block\Collection\FieldTypeCollection;
+use Block\View\FieldMaker;
 
 defined('KRYSTAL') or die;
 
@@ -175,40 +175,65 @@ defined('KRYSTAL') or die;
 
         <?php if (!empty($fields)): ?>
         <div role="tabpanel" class="tab-pane" id="fields">
-            <?php foreach ($fields as $category => $items): ?>
-              <fieldset>
-                <legend class="container"><?= $category; ?></legend>
+            <ul class="nav nav-tabs" role="tablist">
+                <?php if (isset($fields['regular'])): ?>
+                <li role="presentation" class="nav-item active"><a class="nav-link" href="#fields-main" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-file"></i> <?php $this->show('Field'); ?></a></li>
+                <?php endif; ?>
 
-                <?php foreach ($items as $item): ?>
-                <div class="form-group">
-                    <label class="col-lg-12 control-label"><?= $item['name']; ?></label>
+                <?php if (isset($fields['translatable'])): ?>
+                <?php foreach ($languages as $index => $language): ?>
+                <li role="presentation" class="nav-item"><a class="nav-link" href="#field-language-<?= $language->getId(); ?>" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-th-list"></i> <?= $language->getName(); ?></a></li>
+                <?php endforeach; ?>
+                <?php endif; ?>
+            </ul>
 
-                    <div class="col-lg-10">
-                        <?php if (FieldTypeCollection::TYPE_TEXT == $item['type']): ?>
-                        <?= Element::text(sprintf('field[%s]', $item['id']), $item['value'], array('class' => 'form-control')); ?>
-                        <?php endif; ?>
+            <div class="tab-content">
+                <?php if (isset($fields['regular'])): ?>
+                <div role="tabpanel" class="tab-pane active show" id="fields-main">
+                    <?php foreach ($fields['regular'] as $category => $items): ?>
+                      <fieldset>
+                        <legend class="container"><?= $category; ?></legend>
 
-                        <?php if (FieldTypeCollection::TYPE_TEXTAREA == $item['type'] || FieldTypeCollection::TYPE_ARRAY == $item['type']): ?>
-                        <?= Element::textarea(sprintf('field[%s]', $item['id']), $item['value'], array('class' => 'form-control')); ?>
-                        <?php endif; ?>
+                        <?php foreach ($items as $item): ?>
+                        <div class="form-group">
+                            <label class="col-lg-12 control-label"><?= $item['name']; ?></label>
 
-                        <?php if (FieldTypeCollection::TYPE_NUMBER == $item['type']): ?>
-                        <?= Element::number(sprintf('field[%s]', $item['id']), $item['value'], array('class' => 'form-control')); ?>
-                        <?php endif; ?>
+                            <div class="col-lg-10">
+                                <?= FieldMaker::makeRegularField($item['id'], $item['value'], $item['type']); ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                      </fieldset>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
 
-                        <?php if (FieldTypeCollection::TYPE_BOOLEAN == $item['type']): ?>
-                        <?= Element::checkbox(sprintf('field[%s]', $item['id']), $item['value'], array('class' => '--form-control')); ?>
-                        <?php endif; ?>
+                <?php if (isset($fields['translatable'])): ?>
+                <?php foreach ($languages as $index => $language): ?>
+                <div role="tabpanel" class="tab-pane" id="field-language-<?= $language->getId(); ?>">
+                    <div>
+                        <?php $this->loadPartial('language-name', array('language' => $language)); ?>
 
-                        <?php if (FieldTypeCollection::TYPE_WYSIWYG == $item['type']): ?>
-                        <?= Element::textarea(sprintf('field[%s]', $item['id']), $item['value'], array('data-wysiwyg' => 'true')); ?>
-                        <?php endif; ?>
+                        <?php foreach ($fields['translatable'] as $category => $items): ?>
+                          <fieldset>
+                            <legend class="container"><?= $category; ?></legend>
+
+                            <?php foreach ($items as $item): ?>
+                            <div class="form-group">
+                                <label class="col-lg-12 control-label"><?= $item['name']; ?></label>
+
+                                <div class="col-lg-10">
+                                    <?= FieldMaker::makeTranslatableField($item['id'], $language->getId(), '', $item['type']); ?>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                          </fieldset>
+                        <?php endforeach; ?>
                     </div>
                 </div>
-                <?php endforeach; ?>
-
-              </fieldset>
-            <?php endforeach; ?>
+                <?php endforeach; ?>            
+                <?php endif; ?>
+            </div>
         </div>
         <?php endif; ?>
 	</div>
