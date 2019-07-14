@@ -223,7 +223,7 @@ defined('KRYSTAL') or die;
                                 <label class="col-lg-12 control-label"><?= $item['name']; ?></label>
 
                                 <div class="col-lg-10">
-                                    <?= FieldMaker::makeTranslatableField($item['id'], $language->getId(), '', $item['type']); ?>
+                                    <?= FieldMaker::makeTranslatableField($item['id'], $language->getId(), $item['translations'][$language->getId()], $item['type']); ?>
                                 </div>
                             </div>
                             <?php endforeach; ?>
