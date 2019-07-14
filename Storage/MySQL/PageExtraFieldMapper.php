@@ -47,6 +47,7 @@ final class PageExtraFieldMapper extends AbstractMapper implements SharedFieldIn
             CategoryFieldMapper::column('id'),
             CategoryFieldMapper::column('name'),
             CategoryFieldMapper::column('type'),
+            CategoryFieldMapper::column('translatable'),
             CategoryMapper::column('name') => 'category',
             PageExtraFieldMapper::column('value') // Non-translatable value
         );
