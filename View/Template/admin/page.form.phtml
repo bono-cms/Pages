@@ -2,7 +2,6 @@
 
 use Krystal\Form\Element;
 use Cms\Service\LanguageManager;
-use Block\View\FieldMaker;
 
 defined('KRYSTAL') or die;
 
@@ -12,9 +11,8 @@ defined('KRYSTAL') or die;
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="nav-item active"><a class="nav-link" href="#page" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-file"></i> <?php $this->show('Page'); ?></a></li>
         <li role="presentation" class="nav-item"><a class="nav-link" href="#configuration" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-th-list"></i> <?php $this->show('Configuration'); ?></a></li>
-        <?php if (!empty($fields)): ?>
-        <li role="presentation" class="nav-item"><a class="nav-link" href="#fields" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-th-list"></i> <?php $this->show('Extra fields'); ?></a></li>
-        <?php endif; ?>
+
+        <?php $this->loadPartial('block-tab'); ?>
     </ul>
 
     <div class="tab-content">
@@ -100,12 +98,7 @@ defined('KRYSTAL') or die;
             <div class="hidden">
             <?php endif; ?>
 
-            <div class="form-group">
-                <label class="col-lg-12 control-label"><?php $this->show('Attached field categories'); ?></label>
-                <div class="col-lg-10">
-                    <?= Element::select('block[]', $blockCategories, $activeBlockCategoryIds, array('multiple' => true, 'class' => 'form-control')); ?>
-                </div>
-            </div>
+            <?php $this->loadPartial('block-field'); ?>
 
             <div class="form-group">
                 <label class="col-lg-2 control-label"><?php $this->show('Controller'); ?></label>
@@ -173,69 +166,7 @@ defined('KRYSTAL') or die;
             </div>
         </div>
 
-        <?php if (!empty($fields)): ?>
-        <div role="tabpanel" class="tab-pane" id="fields">
-            <ul class="nav nav-tabs" role="tablist">
-                <?php if (isset($fields['regular'])): ?>
-                <li role="presentation" class="nav-item active"><a class="nav-link" href="#fields-main" role="tab" data-toggle="tab"><?php $this->show('Shared fields'); ?></a></li>
-                <?php endif; ?>
-
-                <?php if (isset($fields['translatable'])): ?>
-                <?php foreach ($languages as $index => $language): ?>
-                <li role="presentation" class="nav-item"><a class="nav-link" href="#field-language-<?= $language->getId(); ?>" role="tab" data-toggle="tab"><?php $this->show('Fields'); ?> <small>(<?= $language->getName(); ?>)</small></a></li>
-                <?php endforeach; ?>
-                <?php endif; ?>
-            </ul>
-
-            <div class="tab-content">
-                <?php if (isset($fields['regular'])): ?>
-                <div role="tabpanel" class="tab-pane active show" id="fields-main">
-                    <?php foreach ($fields['regular'] as $category => $items): ?>
-                      <fieldset>
-                        <legend class="container"><?= $category; ?></legend>
-
-                        <?php foreach ($items as $item): ?>
-                        <div class="form-group">
-                            <label class="col-lg-12 control-label"><?= $item['name']; ?></label>
-
-                            <div class="col-lg-10">
-                                <?= FieldMaker::makeRegularField($item['id'], $item['value'], $item['type']); ?>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                      </fieldset>
-                    <?php endforeach; ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if (isset($fields['translatable'])): ?>
-                <?php foreach ($languages as $index => $language): ?>
-                <div role="tabpanel" class="tab-pane" id="field-language-<?= $language->getId(); ?>">
-                    <div>
-                        <?php $this->loadPartial('language-name', array('language' => $language)); ?>
-
-                        <?php foreach ($fields['translatable'] as $category => $items): ?>
-                          <fieldset>
-                            <legend class="container"><?= $category; ?></legend>
-
-                            <?php foreach ($items as $item): ?>
-                            <div class="form-group">
-                                <label class="col-lg-12 control-label"><?= $item['name']; ?></label>
-
-                                <div class="col-lg-10">
-                                    <?= FieldMaker::makeTranslatableField($item['id'], $language->getId(), $item['translations'][$language->getId()], $item['type']); ?>
-                                </div>
-                            </div>
-                            <?php endforeach; ?>
-                          </fieldset>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                <?php endforeach; ?>            
-                <?php endif; ?>
-            </div>
-        </div>
-        <?php endif; ?>
+        <?php $this->loadPartial('block-content'); ?>
 	</div>
 
     <?php $this->loadPartial('actions', array(
