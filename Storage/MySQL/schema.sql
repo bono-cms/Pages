@@ -38,9 +38,8 @@ CREATE TABLE `bono_module_pages_extra_fields_cat_rel` (
 
 DROP TABLE IF EXISTS `bono_module_pages_extra_fields`;
 CREATE TABLE `bono_module_pages_extra_fields` (
-
     `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `page_id` INT NOT NULL,
+    `entity_id` INT NOT NULL COMMENT 'Page ID',
     `field_id` INT NOT NULL COMMENT 'Related field_id in block module',
     `value` varchar(255) NOT NULL COMMENT 'Non-translateable value',
     
@@ -50,7 +49,6 @@ CREATE TABLE `bono_module_pages_extra_fields` (
 
 DROP TABLE IF EXISTS `bono_module_pages_extra_fields_translations`;
 CREATE TABLE `bono_module_pages_extra_fields_translations` (
-
     `id` INT NOT NULL,
     `lang_id` INT NOT NULL COMMENT 'Language identificator',
     `value` varchar(255) NOT NULL,
