@@ -11,12 +11,9 @@
 
 namespace Pages\Storage\MySQL;
 
-use Cms\Storage\MySQL\AbstractMapper;
-use Block\Storage\MySQL\CategoryFieldMapper;
-use Block\Storage\MySQL\CategoryMapper;
-use Block\Storage\SharedFieldInterface;
+use Block\Storage\MySQL\AbstractFieldMapper;
 
-final class PageExtraFieldMapper extends AbstractMapper implements SharedFieldInterface
+final class PageExtraFieldMapper extends AbstractFieldMapper
 {
     /**
      * {@inheritDoc}
@@ -35,114 +32,10 @@ final class PageExtraFieldMapper extends AbstractMapper implements SharedFieldIn
     }
 
     /**
-     * Fetch active translation by field ids
-     * 
-     * @param array $fieldIds
-     * @return array
+     * {@inheritDoc}
      */
-    public function findActiveTranslations(array $fieldIds)
+    public static function getRelationTable()
     {
-        // Columns to be selected
-        $columns = array(
-            PageExtraFieldMapper::column('field_id'),
-            PageExtraFieldTranslationMapper::column('value')
-        );
-        
-        $db = $this->db->select($columns)
-                       ->from(PageExtraFieldMapper::getTableName())
-                       // Translation relation
-                       ->leftJoin(PageExtraFieldTranslationMapper::getTableName(), array(
-                            PageExtraFieldTranslationMapper::column('id') => PageExtraFieldMapper::getRawColumn('id')
-                       ))
-                       ->whereIn(PageExtraFieldMapper::column('field_id'), $fieldIds)
-                       ->andWhereEquals(PageExtraFieldTranslationMapper::column('lang_id'), $this->getLangId());
-
-        return $db->queryAll();
-    }
-
-    /**
-     * Find field translation by associated page id
-     * 
-     * @param int $id Page id
-     * @return array
-     */
-    public function findTranslationsByPageId($id)
-    {
-        // Columns to be selected
-        $columns = array(
-            PageExtraFieldMapper::column('field_id'),
-            PageExtraFieldTranslationMapper::column('lang_id'),
-            PageExtraFieldTranslationMapper::column('value')
-        );
-
-        $db = $this->db->select($columns)
-                       ->from(PageExtraFieldMapper::getTableName())
-                       // Translation relation
-                       ->leftJoin(PageExtraFieldTranslationMapper::getTableName(), array(
-                            PageExtraFieldTranslationMapper::column('id') => PageExtraFieldMapper::getRawColumn('id')
-                       ))
-                       ->whereEquals(PageExtraFieldMapper::column('page_id'), $id);
-
-        return $db->queryAll();
-    }
-
-    /**
-     * Find attached fields by page id
-     * 
-     * @param int $id
-     * @return array
-     */
-    public function findFields($id)
-    {
-        // To be selected
-        $columns = array(
-            CategoryFieldMapper::column('id'),
-            CategoryFieldMapper::column('name'),
-            CategoryFieldMapper::column('type'),
-            CategoryFieldMapper::column('translatable'),
-            CategoryMapper::column('name') => 'category',
-            PageExtraFieldMapper::column('value') // Non-translatable value
-        );
-
-        $db = $this->db->select($columns, true)
-                       ->from(CategoryFieldMapper::getTableName())
-                       ->leftJoin(CategoryMapper::getTableName(), array(
-                            CategoryMapper::column('id') => CategoryFieldMapper::getRawColumn('category_id')
-                       ))
-                       // Block relation
-                       ->leftJoin(PageExtraFieldRelation::getTableName(), array(
-                            PageExtraFieldRelation::column('slave_id') => CategoryFieldMapper::getRawColumn('category_id')
-                       ))
-                       // Field value mapper
-                       ->leftJoin(PageExtraFieldMapper::getTableName(), array(
-                            PageExtraFieldMapper::column('page_id') => PageExtraFieldRelation::getRawColumn('master_id'),
-                            PageExtraFieldMapper::column('field_id') => CategoryFieldMapper::getRawColumn('id'),
-                       ))
-                       ->whereEquals(PageExtraFieldRelation::column('master_id'), $id);
-
-        return $db->queryAll();
-    }
-
-    /**
-     * Find attached category ids
-     * 
-     * @param int $pageId Target page id
-     * @return array
-     */
-    public function findAttachedSlaves($pageId)
-    {
-        return $this->getSlaveIdsFromJunction(PageExtraFieldRelation::getTableName(), $pageId);
-    }
-
-    /**
-     * Save junction relation
-     * 
-     * @param int $pageId Target page id
-     * @param array $slaveIds
-     * @return boolean
-     */
-    public function saveRelation($pageId, array $slaveIds)
-    {
-        return $this->syncWithJunction(PageExtraFieldRelation::getTableName(), $pageId, $slaveIds);
+        return PageExtraFieldRelation::getTableName();
     }
 }
