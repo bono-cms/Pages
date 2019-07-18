@@ -53,14 +53,12 @@ final class Page extends AbstractController
 
         $provider = new ControllerProvider($this->moduleManager->getRoutes());
 
+        // Load fields, if possible
+        $this->loadFields($id);
+
         return $this->view->render('page.form', array(
             'controllers' => $provider->getControllers(),
-            'page' => $page,
-
-            // Extra fields
-            'blockCategories' => $this->getService('Block', 'categoryService')->fetchList(),
-            'activeBlockCategoryIds' => !$new ? $this->getModuleService('fieldService')->getAttachedCategories($id) : array(),
-            'fields' => !$new ? $this->getModuleService('fieldService')->getFields($id) : array()
+            'page' => $page
         ));
     }
 
