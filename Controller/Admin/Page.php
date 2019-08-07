@@ -20,16 +20,6 @@ use Pages\Service\ControllerProvider;
 final class Page extends AbstractController
 {
     /**
-     * Returns page manager
-     * 
-     * @return \Pages\Service\PageManager
-     */
-    private function getPageManager()
-    {
-        return $this->getModuleService('pageManager');
-    }
-
-    /**
      * Creates a form
      * 
      * @param \Krystal\Stdlib\VirtualEntity|array $page
@@ -106,7 +96,7 @@ final class Page extends AbstractController
      */
     public function editAction($id)
     {
-        $pages = $this->getPageManager()->fetchById($id, true);
+        $pages = $this->getModuleService('pageManager')->fetchById($id, true);
 
         if ($pages !== false) {
             $name = $this->getCurrentProperty($pages, 'name');
@@ -154,14 +144,16 @@ final class Page extends AbstractController
     public function tweakAction()
     {
         if ($this->request->hasPost('seo')) {
+            $pageManager = $this->getModuleService('pageManager');
+
             $seo = $this->request->getPost('seo');
 
             if ($this->request->hasPost('default')) {
                 $default = $this->request->getPost('default');
-                $this->getPageManager()->makeDefault($default);
+                $pageManager->makeDefault($default);
             }
 
-            if ($this->getPageManager()->updateSeo($seo)) {
+            if ($pageManager->updateSeo($seo)) {
                 $this->flashBag->set('success', 'Settings have been saved successfully');
                 return '1';
             }
