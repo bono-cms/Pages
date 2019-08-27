@@ -114,19 +114,6 @@ final class Page extends AbstractController
     }
 
     /**
-     * Append fields on demand
-     * 
-     * @param object $page
-     * @return void
-     */
-    private function appendFieldsIfPossible($page)
-    {
-        if ($this->moduleManager->isLoaded('Block')) {
-            $this->getModuleService('fieldService')->appendFields($page);
-        }
-    }
-
-    /**
      * Grabs template name
      * 
      * @param \Krystal\Stdlib\VirtualEntity $page
