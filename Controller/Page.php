@@ -49,7 +49,7 @@ final class Page extends AbstractController
             // Append fields on demand
             $this->appendFieldsIfPossible($page);
 
-            return $this->view->render($this->grabTemplateName($page), array(
+            return $this->view->render($page->hasTemplate() ? $page->getTemplate() : 'pages-page', array(
                 'page' => $page,
                 'languages' => $this->getPageManager()->getSwitchUrls($id)
             ));
@@ -110,21 +110,6 @@ final class Page extends AbstractController
         } else {
             // Returning false from a controller's action triggers 404 error automatically
             return false;
-        }
-    }
-
-    /**
-     * Grabs template name
-     * 
-     * @param \Krystal\Stdlib\VirtualEntity $page
-     * @return string
-     */
-    private function grabTemplateName(VirtualEntity $page)
-    {
-        if (trim($page->getTemplate()) !== '') {
-            return $page->getTemplate();
-        } else {
-            return 'pages-page';
         }
     }
 
