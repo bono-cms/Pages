@@ -27,7 +27,18 @@ final class PageEntity extends VirtualEntity
 
         return isset($fields[$id]) ? $fields[$id] : null;
     }
-    
+
+    /**
+     * Checks whether current page entity has custom template override
+     * 
+     * @return boolean
+     */
+    public function hasTemplate()
+    {
+        $template = $this->getTemplate();
+        return trim($template) !== '';
+    }
+
     /**
      * Checks whether page has image
      * 
