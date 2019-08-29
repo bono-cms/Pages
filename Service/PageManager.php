@@ -15,7 +15,6 @@ use Cms\Service\AbstractManager;
 use Cms\Service\WebPageManagerInterface;
 use Pages\Storage\PageMapperInterface;
 use Pages\Storage\DefaultMapperInterface;
-use Krystal\Security\Filter;
 use Krystal\Stdlib\ArrayUtils;
 use Krystal\Db\Filter\FilterableServiceInterface;
 use Krystal\Image\Tool\ImageManagerInterface;
