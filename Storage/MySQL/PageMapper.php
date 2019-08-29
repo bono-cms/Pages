@@ -59,7 +59,9 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
 
             // Web page meta columns
             WebPageMapper::column('slug'),
-            WebPageMapper::column('controller'),
+            WebPageMapper::column('changefreq'),
+            WebPageMapper::column('priority'),
+            WebPageMapper::column('controller')
         );
     }
 

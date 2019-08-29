@@ -182,7 +182,9 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
                 ->setTitle($page['title'], PageEntity::FILTER_HTML)
                 ->setName($page['name'], PageEntity::FILTER_HTML)
                 ->setMetaDescription($page['meta_description'], PageEntity::FILTER_HTML)
-                ->setKeywords($page['keywords'], PageEntity::FILTER_HTML);
+                ->setKeywords($page['keywords'], PageEntity::FILTER_HTML)
+                ->setChangeFreq($page['changefreq'])
+                ->setPriority($page['priority']);
 
         return $entity;
     }
@@ -257,7 +259,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
         $controller = isset($data['page']['controller']) ? $data['page']['controller'] : 'Pages:Page@indexAction';
 
         // Keep only page related attributes
-        $data['page'] = ArrayUtils::arrayWithout($data['page'], array('controller', 'makeDefault', 'slug', 'menu', 'remove_cover'));
+        $data['page'] = ArrayUtils::arrayWithout($data['page'], array('controller', 'makeDefault', 'menu', 'remove_cover'));
 
         return $this->pageMapper->savePage('Pages', $controller, $data['page'], $data['translation']);
     }

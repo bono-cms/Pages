@@ -48,7 +48,8 @@ final class Page extends AbstractController
 
         return $this->view->render('page.form', array(
             'controllers' => $provider->getControllers(),
-            'page' => $page
+            'page' => $page,
+            'new' => $new
         ));
     }
 
@@ -80,9 +81,14 @@ final class Page extends AbstractController
      */
     public function addAction()
     {
+        // CMS configuration object
+        $config = $this->getService('Cms', 'configManager')->getEntity();
+
         $page = new PageEntity();
         $page->setSeo(true)
-             ->setController('Pages:Page@indexAction');
+             ->setController('Pages:Page@indexAction')
+             ->setChangeFreq($config->getSitemapFrequency())
+             ->setPriority($config->getSitemapPriority());
 
         return $this->createForm($page, 'Add a page');
     }
