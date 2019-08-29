@@ -13,7 +13,6 @@ namespace Pages\Service;
 
 use Cms\Service\AbstractManager;
 use Cms\Service\WebPageManagerInterface;
-use Cms\Service\HistoryManagerInterface;
 use Pages\Storage\PageMapperInterface;
 use Pages\Storage\DefaultMapperInterface;
 use Krystal\Security\Filter;
@@ -38,13 +37,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     private $webPageManager;
 
     /**
-     * History Manager to track activity
-     * 
-     * @var \Cms\Service\HistoryManagerInterface
-     */
-    private $historyManager;
-
-    /**
      * Image handler
      * 
      * @var \Krystal\Image\Tool\ImageManagerInterface
@@ -56,19 +48,13 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      * 
      * @param \Page\Storage\PageMapperInterface $pageMapper
      * @param \Cms\Service\WebPageManagerInterface $webPageManager
-     * @param \Cms\Service\HistoryManagerInterface $historyManager
      * @param \Krystal\Image\Tool\ImageManagerInterface $imageManager
      * @return void
      */
-    public function __construct(
-        PageMapperInterface $pageMapper, 
-        WebPageManagerInterface $webPageManager, 
-        HistoryManagerInterface $historyManager,
-        ImageManagerInterface $imageManager
-    ){
+    public function __construct(PageMapperInterface $pageMapper, WebPageManagerInterface $webPageManager, ImageManagerInterface $imageManager)
+    {
         $this->pageMapper = $pageMapper;
         $this->webPageManager = $webPageManager;
-        $this->historyManager = $historyManager;
         $this->imageManager = $imageManager;
     }
 
@@ -291,7 +277,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
             $this->imageManager->upload($id, $file);
         }
 
-        #$this->track('A new "%s" page has been created', $page['name']);
         return true;
     }
 
@@ -325,10 +310,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
             }
         }
 
-        $this->savePage($input);
-
-        #$this->track('The page "%s" has been updated', $page['name']);
-        return true;
+        return $this->savePage($input);
     }
 
     /**
@@ -339,19 +321,7 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
      */
     public function deleteById($id)
     {
-        // Gotta grab page's title, before removing it
-        #$name = Filter::escape($this->pageMapper->fetchNameById($id));
-
-        // Remove image if any
-        $this->imageManager->delete($id);
-
-        if ($this->pageMapper->deletePage($id)) {
-            #$this->track('The page "%s" has been removed', $name);
-            return true;
-
-        } else {
-            return false;
-        }
+        return $this->imageManager->delete($id) && $this->pageMapper->deletePage($id);
     }
 
     /**
@@ -363,23 +333,6 @@ final class PageManager extends AbstractManager implements PageManagerInterface,
     public function deleteByIds(array $ids)
     {
         // Remove associated images if any
-        $this->imageManager->deleteMany($ids);
-
-        $this->pageMapper->deletePage($ids);
-
-        $this->track('%s pages have been removed', count($ids));
-        return true;
-    }
-
-    /**
-     * Tracks activity
-     * 
-     * @param string $message
-     * @param string $placeholder
-     * @return boolean
-     */
-    private function track($message, $placeholder = '')
-    {
-        return $this->historyManager->write('Pages', $message, $placeholder);
+        return $this->imageManager->deleteMany($ids) && $this->pageMapper->deletePage($ids);
     }
 }

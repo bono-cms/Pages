@@ -119,6 +119,7 @@ final class Page extends AbstractController
      */
     public function deleteAction($id)
     {
+        $historyService = $this->getService('Cms', 'historyManager');
         $service = $this->getModuleService('pageManager');
 
         // Batch removal
@@ -128,14 +129,22 @@ final class Page extends AbstractController
             $service->deleteByIds($ids);
             $this->flashBag->set('success', 'Selected elements have been removed successfully');
 
+            // Save in the history
+            $historyService->write('Pages', '%s pages have been removed', count($ids));
+
         } else {
             $this->flashBag->set('warning', 'You should select at least one element to remove');
         }
 
         // Single removal
         if (!empty($id)) {
+            $page = $this->getModuleService('pageManager')->fetchById($id, false);
+
             $service->deleteById($id);
             $this->flashBag->set('success', 'Selected element has been removed successfully');
+
+            // Save in the history
+            $historyService->write('Pages', 'The page "%s" has been removed', $page->getName());
         }
 
         return '1';
@@ -188,16 +197,24 @@ final class Page extends AbstractController
 
         if (1) {
             $service = $this->getModuleService('pageManager');
+            $historyService = $this->getService('Cms', 'historyManager');
+
+            // Current page name
+            $name = $this->getCurrentProperty($this->request->getPost('translation'), 'name');
 
             if (!empty($input['id'])) {
                 if ($service->update($this->request->getAll())) {
                     $this->flashBag->set('success', 'The element has been updated successfully');
+
+                    $historyService->write('Pages', 'The page "%s" has been updated', $name);
                     return '1';
                 }
 
             } else {
                 if ($service->add($this->request->getAll())) {
                     $this->flashBag->set('success', 'The element has been created successfully');
+
+                    $historyService->write('Pages', 'A new "%s" page has been created', $name);
                     return $service->getLastId();
                 }
             }

@@ -4,6 +4,7 @@ CHANGELOG
 1.4
 ---
 
+ * Moved history tracker of out main service into the main controller
  * Disabled autocomplete in forms
  * Ability to attach images
  * Support complete internalization

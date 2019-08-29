@@ -54,7 +54,7 @@ final class Module extends AbstractCmsModule
         $pageMapper = $this->getMapper('/Pages/Storage/MySQL/PageMapper');
 
         return array(
-            'pageManager' => new PageManager($pageMapper, $this->getWebPageManager(), $this->getHistoryManager(), $this->createImageManager()),
+            'pageManager' => new PageManager($pageMapper, $this->getWebPageManager(), $this->createImageManager()),
             'fieldService' => $this->moduleManager->isLoaded('Block') ? new FieldService($this->getMapper('\Pages\Storage\MySQL\PageExtraFieldMapper')) : null
         );
     }
