@@ -19,7 +19,7 @@ use Krystal\Stdlib\ArrayUtils;
 use Krystal\Db\Filter\FilterableServiceInterface;
 use Krystal\Image\Tool\ImageManagerInterface;
 
-final class PageManager extends AbstractManager implements PageManagerInterface, FilterableServiceInterface
+final class PageManager extends AbstractManager implements FilterableServiceInterface
 {
     /**
      * Any compliant page mapper

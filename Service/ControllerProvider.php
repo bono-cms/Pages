@@ -13,7 +13,7 @@ namespace Pages\Service;
 
 use Krystal\Application\Route\MapManager;
 
-final class ControllerProvider implements ControllerProviderInterface
+final class ControllerProvider
 {
     /**
      * Global route map
