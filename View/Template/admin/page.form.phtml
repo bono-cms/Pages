@@ -9,8 +9,8 @@ defined('KRYSTAL') or die;
 
 <form class="card" data-group="page" autocomplete="off">
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="nav-item active"><a class="nav-link" href="#page" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-file"></i> <?php $this->show('Page'); ?></a></li>
-        <li role="presentation" class="nav-item"><a class="nav-link" href="#configuration" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-th-list"></i> <?php $this->show('Configuration'); ?></a></li>
+        <li role="presentation" class="nav-item active"><a class="nav-link" href="#page" role="tab" data-toggle="tab"><i class="far fa-file"></i> <?php $this->show('Page'); ?></a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#configuration" role="tab" data-toggle="tab"><i class="fas fa-grip-horizontal"></i> <?php $this->show('Configuration'); ?></a></li>
 
         <?php if (isset($blockCategories)): ?>
         <?php $this->loadPartial('block-tab'); ?>
