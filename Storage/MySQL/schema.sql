@@ -43,7 +43,7 @@ CREATE TABLE `bono_module_pages_extra_fields` (
     `field_id` INT NOT NULL COMMENT 'Related field_id in block module',
     `value` varchar(255) NOT NULL COMMENT 'Non-translateable value',
     
-    FOREIGN KEY (page_id) REFERENCES bono_module_pages(id) ON DELETE CASCADE,
+    FOREIGN KEY (entity_id) REFERENCES bono_module_pages(id) ON DELETE CASCADE,
     FOREIGN KEY (field_id) REFERENCES bono_module_block_category_fields(id) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = UTF8;
 
