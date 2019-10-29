@@ -12,9 +12,7 @@ defined('KRYSTAL') or die;
         <li role="presentation" class="nav-item active"><a class="nav-link" href="#page" role="tab" data-toggle="tab"><i class="far fa-file"></i> <?php $this->show('Page'); ?></a></li>
         <li role="presentation" class="nav-item"><a class="nav-link" href="#configuration" role="tab" data-toggle="tab"><i class="fas fa-grip-horizontal"></i> <?php $this->show('Configuration'); ?></a></li>
 
-        <?php if (isset($blockCategories)): ?>
-        <?php $this->loadPartial('block-tab'); ?>
-        <?php endif; ?>
+        <?php $this->loadPartialIfPossible('block-tab'); ?>
     </ul>
 
     <div class="tab-content">
@@ -114,9 +112,7 @@ defined('KRYSTAL') or die;
             <div class="hidden">
             <?php endif; ?>
 
-            <?php if (isset($blockCategories)): ?>
-            <?php $this->loadPartial('block-field'); ?>
-            <?php endif; ?>
+            <?php $this->loadPartialIfPossible('block-field'); ?>
 
             <div class="form-group">
                 <label class="col-lg-2 control-label"><?php $this->show('Controller'); ?></label>
@@ -184,9 +180,7 @@ defined('KRYSTAL') or die;
             </div>
         </div>
 
-        <?php if (isset($blockCategories)): ?>
-        <?php $this->loadPartial('block-content'); ?>
-        <?php endif; ?>
+        <?php $this->loadPartialIfPossible('block-content'); ?>
 	</div>
 
     <?php $this->loadPartial('actions', array(
