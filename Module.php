@@ -54,7 +54,7 @@ final class Module extends AbstractCmsModule
 
         return array(
             'pageManager' => new PageManager($pageMapper, $this->getWebPageManager(), $this->createImageManager()),
-            'fieldService' => $this->createFieldService('\Pages\Storage\MySQL\PageExtraFieldMapper')
+            'blockFieldService' => $this->createFieldService('\Pages\Storage\MySQL\PageExtraFieldMapper')
         );
     }
 }
