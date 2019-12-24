@@ -41,7 +41,7 @@ CREATE TABLE `bono_module_pages_extra_fields` (
     `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `entity_id` INT NOT NULL COMMENT 'Page ID',
     `field_id` INT NOT NULL COMMENT 'Related field_id in block module',
-    `value` varchar(255) NOT NULL COMMENT 'Non-translateable value',
+    `value` LONGTEXT NOT NULL COMMENT 'Non-translateable value',
     
     FOREIGN KEY (entity_id) REFERENCES bono_module_pages(id) ON DELETE CASCADE,
     FOREIGN KEY (field_id) REFERENCES bono_module_block_category_fields(id) ON DELETE CASCADE
@@ -51,7 +51,7 @@ DROP TABLE IF EXISTS `bono_module_pages_extra_fields_translations`;
 CREATE TABLE `bono_module_pages_extra_fields_translations` (
     `id` INT NOT NULL,
     `lang_id` INT NOT NULL COMMENT 'Language identificator',
-    `value` varchar(255) NOT NULL,
+    `value` LONGTEXT NOT NULL,
 
     FOREIGN KEY (id) REFERENCES bono_module_pages_extra_fields(id) ON DELETE CASCADE,
     FOREIGN KEY (lang_id) REFERENCES bono_module_cms_languages(id) ON DELETE CASCADE
