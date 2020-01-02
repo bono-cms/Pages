@@ -98,7 +98,10 @@ final class PageManager extends AbstractManager implements FilterableServiceInte
     public function fetchWebPageIdById($id)
     {
         $page = $this->fetchById($id);
-        return $page->getWebPageId();
+
+        if ($page) {
+            return $page->getWebPageId();
+        }
     }
 
     /**
