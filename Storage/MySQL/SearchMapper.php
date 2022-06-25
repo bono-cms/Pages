@@ -35,7 +35,8 @@ final class SearchMapper extends AbstractMapper
                      ->from(PageMapper::getTableName())
                      // Translation relation
                      ->innerJoin(PageTranslationMapper::getTableName(), array(
-                        PageMapper::column('id') => PageTranslationMapper::column('id')
+                        PageMapper::column('id') => PageTranslationMapper::column('id'),
+                        PageTranslationMapper::column('lang_id') => $this->getLangId()
                      ))
                      // Filtering conditions
                      ->whereEquals(PageMapper::column('seo'), '1')
