@@ -36,7 +36,7 @@ Basic example:
     </section>
 
 # Available methods
-Custom fields are managed through the **Block Module**. Once a group of custom fields is created and attached to a page, you can retrieve their values using the `getField()` method:
+The following methods can be used to retrieve page-related data:
 
     $page->getName(); // Returns page name
     $page->getTitle();  // Returns page title
