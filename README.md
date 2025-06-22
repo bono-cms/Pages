@@ -44,6 +44,13 @@ The following methods can be used to retrieve page-related data:
     $page->getDefault(); // Check whether this is home page
     $page->getUrl(); // Returns current page URL
 
+# URL Generation
+
+To generate a URL for a page by its ID (assuming the page ID is 1), use:
+
+    <a href="<?= $cms->createUrl(1, 'Pages'); ?>">View page</a>
+
+
 # Custom Fields
 
 Custom fields are available via Block module. Once a group of custom fields created and attached to your page, you get values of custome fields via `getField()`  method, like this:
