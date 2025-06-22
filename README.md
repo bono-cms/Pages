@@ -4,16 +4,16 @@ Pages module
 
 The **Pages module** is a powerful tool for managing and customizing pages on your website. It enables you to create custom pages and assign unique templates and controllers to each, providing full flexibility in design and functionality. With this module, you can structure your website efficiently, ensuring seamless integration between content, templates, and backend logic.
 
-# Templates
+## Templates
 
 This module comes with three default templates for managing different types of pages.
 
-## Home page
+### Home page
 All logic related to the home page is handled within the `pages-home.phtml` template.
 
 **TIP:** To check in the layout whether the current page is the home page, use the `$page->getDefault()` method globally.
 
-## Default template
+### Default template
 The default template is `pages-page.phtml`
 
 Basic example:
@@ -23,7 +23,7 @@ Basic example:
 	    <?= $page->getContent(); ?>
     </article>
 
-## 404 Template
+### 404 Template
 The `pages-404.phtml` template is rendered when a visitor tries to access a page that does not exist on your website.
 
 Basic example:
@@ -35,7 +35,7 @@ Basic example:
     	</div>
     </section>
 
-# Available methods
+## Available methods
 The following methods can be used to retrieve page-related data:
 
     $page->getName(); // Returns page name
@@ -44,14 +44,14 @@ The following methods can be used to retrieve page-related data:
     $page->getDefault(); // Check whether this is home page
     $page->getUrl(); // Returns current page URL
 
-# URL Generation
+## URL Generation
 
 To generate a URL for a page by its ID (assuming the page ID is 1), use:
 
     <a href="<?= $cms->createUrl(1, 'Pages'); ?>">View page</a>
 
 
-# Custom Fields
+## Custom Fields
 
 Custom fields are available via Block module. Once a group of custom fields created and attached to your page, you get values of custome fields via `getField()`  method, like this:
 
