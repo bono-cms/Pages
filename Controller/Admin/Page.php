@@ -181,9 +181,6 @@ final class Page extends AbstractController
      */
     public function saveAction()
     {
-        // Save dynamic fields, if present
-        $this->saveFields('page');
-
         $input = $this->request->getPost('page');
 
         $formValidator = $this->createValidator(array(
@@ -206,6 +203,9 @@ final class Page extends AbstractController
                 if ($service->update($this->request->getAll())) {
                     $this->flashBag->set('success', 'The element has been updated successfully');
 
+                    // Update dynamic fields, if present
+                    $this->updateFields('page');
+
                     $historyService->write('Pages', 'The page "%s" has been updated', $name);
                     return '1';
                 }
@@ -215,7 +215,12 @@ final class Page extends AbstractController
                     $this->flashBag->set('success', 'The element has been created successfully');
 
                     $historyService->write('Pages', 'A new "%s" page has been created', $name);
-                    return $service->getLastId();
+                    $lastId = $service->getLastId();
+
+                    // Insert dynamic fields, if present
+                    $this->insertFields('page', $lastId);
+
+                    return $lastId;
                 }
             }
 
