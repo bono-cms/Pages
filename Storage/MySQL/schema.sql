@@ -1,4 +1,3 @@
-
 /* Pages */
 DROP TABLE IF EXISTS `bono_module_pages`;
 CREATE TABLE `bono_module_pages` (
@@ -8,7 +7,7 @@ CREATE TABLE `bono_module_pages` (
     `seo` varchar(1) NOT NULL COMMENT 'Whether it should be indexed in SEO',
     `default` varchar(1) NOT NULL COMMENT 'Whether this page is considered default',
     `image` varchar(30) NOT NULL COMMENT 'Attached page image'
-) ENGINE = InnoDB DEFAULT CHARSET = UTF8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `bono_module_pages_translations`;
 CREATE TABLE `bono_module_pages_translations` (
@@ -24,7 +23,7 @@ CREATE TABLE `bono_module_pages_translations` (
     FOREIGN KEY (id) REFERENCES bono_module_pages(id) ON DELETE CASCADE,
     FOREIGN KEY (lang_id) REFERENCES bono_module_cms_languages(id) ON DELETE CASCADE,
     FOREIGN KEY (web_page_id) REFERENCES bono_module_cms_webpages(id) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = UTF8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
 /* Extra fields */
 DROP TABLE IF EXISTS `bono_module_pages_extra_fields_cat_rel`;
@@ -34,7 +33,7 @@ CREATE TABLE `bono_module_pages_extra_fields_cat_rel` (
 
     FOREIGN KEY (master_id) REFERENCES bono_module_pages(id) ON DELETE CASCADE,
     FOREIGN KEY (slave_id) REFERENCES bono_module_block_categories(id) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = UTF8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `bono_module_pages_extra_fields`;
 CREATE TABLE `bono_module_pages_extra_fields` (
@@ -45,7 +44,7 @@ CREATE TABLE `bono_module_pages_extra_fields` (
     
     FOREIGN KEY (entity_id) REFERENCES bono_module_pages(id) ON DELETE CASCADE,
     FOREIGN KEY (field_id) REFERENCES bono_module_block_category_fields(id) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = UTF8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `bono_module_pages_extra_fields_translations`;
 CREATE TABLE `bono_module_pages_extra_fields_translations` (
@@ -55,4 +54,4 @@ CREATE TABLE `bono_module_pages_extra_fields_translations` (
 
     FOREIGN KEY (id) REFERENCES bono_module_pages_extra_fields(id) ON DELETE CASCADE,
     FOREIGN KEY (lang_id) REFERENCES bono_module_cms_languages(id) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = UTF8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_unicode_ci;
