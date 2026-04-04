@@ -8,133 +8,155 @@ defined('KRYSTAL') or die;
 ?>
 
 <form class="card" data-group="page" autocomplete="off">
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="nav-item active"><a class="nav-link" href="#page" role="tab" data-toggle="tab"><i class="far fa-file"></i> <?php $this->show('Page'); ?></a></li>
-        <li role="presentation" class="nav-item"><a class="nav-link" href="#configuration" role="tab" data-toggle="tab"><i class="fas fa-grip-horizontal"></i> <?php $this->show('Configuration'); ?></a></li>
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs" role="tablist">
+            <li role="presentation" class="nav-item">
+                <a class="nav-link active" href="#page" role="tab" data-toggle="tab">
+                    <i class="bi bi-file-earmark"></i> <?= $this->translate('Page'); ?>
+                </a>
+            </li>
+            <li role="presentation" class="nav-item">
+                <a class="nav-link" href="#configuration" role="tab" data-toggle="tab">
+                    <i class="bi bi-grid-3x2-gap"></i> <?= $this->translate('Configuration'); ?>
+                </a>
+            </li>
 
-        <?php $this->loadPartialIfPossible('block-tab'); ?>
-    </ul>
+            <?php $this->loadPartialIfPossible('block-tab'); ?>
+        </ul>
+    </div>
 
-    <div class="tab-content">
-		<div class="tab-pane fade in active" id="page" role="tabpanel">
+    <div class="card-body tab-content">
+        <div class="tab-pane fade show active" id="page" role="tabpanel">
             <?php $this->loadPartial('language-tabs'); ?>
 
-            <div class="tab-content">
+            <div class="tab-content mt-3">
                 <?php foreach ($languages as $index => $language): ?>
                 <?php $entity = LanguageManager::findByLangId($language->getId(), $page); ?>
 
-                <div class="tab-pane fade in <?php echo $index == 0 ? 'active show' : null; ?>" id="<?php printf('language-%s', $language->getId()); ?>" role="tabpanel">
-                    <?php echo Element::hidden(sprintf('translation[%s][id]', $language->getId()), $entity->getId()); ?>
-                    <?php echo Element::hidden(sprintf('translation[%s][web_page_id]', $language->getId()), $entity->getWebPageId()); ?>
-                    <?php echo Element::hidden(sprintf('translation[%s][lang_id]', $language->getId()), $language->getId()); ?>
+                <div class="tab-pane fade <?php echo $index == 0 ? 'show active' : null; ?>" id="<?php printf('language-%s', $language->getId()); ?>" role="tabpanel">
+                    <?= Element::hidden(sprintf('translation[%s][id]', $language->getId()), $entity->getId()); ?>
+                    <?= Element::hidden(sprintf('translation[%s][web_page_id]', $language->getId()), $entity->getWebPageId()); ?>
+                    <?= Element::hidden(sprintf('translation[%s][lang_id]', $language->getId()), $language->getId()); ?>
 
-                    <?php $this->loadPartial('language-name', array('language' => $language)); ?>
+                    <?php $this->loadPartial('language-name', ['language' => $language]); ?>
 
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label"><?php $this->show('Name'); ?></label>
+                    <div class="form-group row mb-3">
+                        <label class="col-lg-2 col-form-label"><?= $this->translate('Name'); ?></label>
                         <div class="col-lg-10">
                             <div class="input-group">
-                                <?php echo Element::text(sprintf('translation[%s][name]', $language->getId()), $entity->getName(), array('class' => 'form-control', 'placeholder' => $this->translate('Page name'))); ?>
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                <?= Element::text(sprintf('translation[%s][name]', $language->getId()), $entity->getName(), ['class' => 'form-control', 'placeholder' => $this->translate('Page name')]); ?>
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="bi bi-pencil"></i></span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label"><?php $this->show('Content'); ?></label>
+                    <div class="form-group row mb-3">
+                        <label class="col-lg-2 col-form-label"><?= $this->translate('Content'); ?></label>
                         <div class="col-lg-10">
-                            <?php echo Element::textarea(sprintf('translation[%s][content]', $language->getId()), $entity->getContent(), array('data-wysiwyg' => 'true')); ?>
+                            <?= Element::textarea(sprintf('translation[%s][content]', $language->getId()), $entity->getContent(), ['data-wysiwyg' => 'true']); ?>
                         </div>
                     </div>
 
-                    <div class="options">
-                        <div class="form-group">
-                            <label class="col-lg-2 control-label"><?php $this->show('Slug'); ?></label>
+                    <div class="options border-top pt-3 mt-3">
+                        <div class="form-group row mb-3">
+                            <label class="col-lg-2 col-form-label"><?= $this->translate('Slug'); ?></label>
                             <div class="col-lg-10">
                                 <div class="input-group">
-                                    <?php echo Element::text(sprintf('translation[%s][slug]', $language->getId()), $entity->getSlug(), array('class' => 'form-control', 'placeholder' => $this->translate('URL slug for this page. By default its taken from the name'))); ?>
-
-                                    <span class="input-group-addon">
-                                        <a href="#" data-slug-selector="<?= LanguageManager::generateSelector($language->getId()); ?>"><i class="glyphicon glyphicon-refresh" data-toggle="tooltip" title="<?php $this->show('Refresh the slug'); ?>"></i></a>
-                                    </span>
+                                    <?= Element::text(sprintf('translation[%s][slug]', $language->getId()), $entity->getSlug(), ['class' => 'form-control', 'placeholder' => $this->translate('URL slug for this page. By default its taken from the name')]); ?>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <a href="#" class="text-secondary" data-slug-selector="<?= LanguageManager::generateSelector($language->getId()); ?>">
+                                                <i class="bi bi-arrow-repeat" data-toggle="tooltip" title="<?= $this->translate('Refresh the slug'); ?>"></i>
+                                            </a>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-lg-12 control-label"><?php $this->show('Change frequency'); ?></label>
+                        <div class="form-group row mb-3">
+                            <label class="col-lg-2 col-form-label"><?= $this->translate('Change frequency'); ?></label>
                             <div class="col-lg-10">
-                                <?php echo Element::select(sprintf('translation[%s][changefreq]', $language->getId()), $this->translateArray($changeFreqs), $entity->getChangeFreq(), array('class' => 'form-control')); ?>
+                                <?= Element::select(sprintf('translation[%s][changefreq]', $language->getId()), $this->translateArray($changeFreqs), $entity->getChangeFreq(), ['class' => 'form-control']); ?>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-lg-2 control-label"><?php $this->show('Priority'); ?></label>
+                        <div class="form-group row mb-3">
+                            <label class="col-lg-2 col-form-label"><?= $this->translate('Priority'); ?></label>
                             <div class="col-lg-10">
-                                <?php echo Element::select(sprintf('translation[%s][priority]', $language->getId()), $priorities, $entity->getPriority(), array('class' => 'form-control')); ?>
+                                <?= Element::select(sprintf('translation[%s][priority]', $language->getId()), $priorities, $entity->getPriority(), ['class' => 'form-control']); ?>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-lg-2 control-label"><?php $this->show('Title'); ?></label>
+                        <div class="form-group row mb-3">
+                            <label class="col-lg-2 col-form-label"><?= $this->translate('Title'); ?></label>
                             <div class="col-lg-10">
                                 <div class="input-group">
-                                    <?php echo Element::text(sprintf('translation[%s][title]', $language->getId()), $entity->getTitle(), array('class' => 'form-control', 'placeholder' => $this->translate('Page title'))); ?>
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                    <?= Element::text(sprintf('translation[%s][title]', $language->getId()), $entity->getTitle(), ['class' => 'form-control', 'placeholder' => $this->translate('Page title')]); ?>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="bi bi-pencil"></i></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-lg-2 control-label"><?php $this->show('Keywords'); ?></label>
+                        <div class="form-group row mb-3">
+                            <label class="col-lg-2 col-form-label"><?= $this->translate('Keywords'); ?></label>
                             <div class="col-lg-10">
-                                <?php echo Element::textarea(sprintf('translation[%s][keywords]', $language->getId()), $entity->getKeywords(), array('class' => 'form-control', 'placeholder' => $this->translate('Keywords used for search engines'))); ?>
+                                <?= Element::textarea(sprintf('translation[%s][keywords]', $language->getId()), $entity->getKeywords(), ['class' => 'form-control', 'placeholder' => $this->translate('Keywords used for search engines')]); ?>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-lg-2 control-label"><?php $this->show('Description'); ?></label>
+                        <div class="form-group row mb-3">
+                            <label class="col-lg-2 col-form-label"><?= $this->translate('Description'); ?></label>
                             <div class="col-lg-10">
-                                <?php echo Element::textarea(sprintf('translation[%s][meta_description]', $language->getId()), $entity->getMetaDescription(), array('class' => 'form-control', 'placeholder' => $this->translate('Meta description for search engines'))); ?>
+                                <?= Element::textarea(sprintf('translation[%s][meta_description]', $language->getId()), $entity->getMetaDescription(), ['class' => 'form-control', 'placeholder' => $this->translate('Meta description for search engines')]); ?>
                             </div>
                         </div>
                     </div>
                 </div>
                 <?php endforeach; ?>
             </div>
-		</div>
+        </div>
 
-        <div role="tabpanel" class="tab-pane" id="configuration">
-            <?php echo Element::hidden('page[id]', $entity->getId()); ?>
-            <?php echo Element::hidden('page[image]', $entity->getImage()); ?>
+        <div role="tabpanel" class="tab-pane fade" id="configuration">
+            <?= Element::hidden('page[id]', $entity->getId()); ?>
+            <?= Element::hidden('page[image]', $entity->getImage()); ?>
 
             <?php if (!$extendedMode): ?>
-            <div class="hidden">
+            <div class="d-none">
             <?php endif; ?>
 
             <?php $this->loadPartialIfPossible('block-field'); ?>
 
-            <div class="form-group">
-                <label class="col-lg-2 control-label"><?php $this->show('Controller'); ?></label>
+            <div class="form-group row mb-3">
+                <label class="col-lg-2 col-form-label"><?= $this->translate('Controller'); ?></label>
                 <div class="col-lg-10">
-                    <?php echo Element::select('page[controller]', $controllers, $entity->getController(), array('class' => 'form-control')); ?>
+                    <?= Element::select('page[controller]', $controllers, $entity->getController(), ['class' => 'form-control']); ?>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="col-lg-2 control-label"><?php $this->show('Template override'); ?></label>
+            <div class="form-group row mb-3">
+                <label class="col-lg-2 col-form-label"><?= $this->translate('Template override'); ?></label>
                 <div class="col-lg-10">
                     <div class="input-group">
-                        <?php echo Element::text('page[template]', $entity->getTemplate(), array('class' => 'form-control', 'placeholder' => $this->translate('If you need another template which is different from default one, you can define its name here'))); ?>
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                        <?= Element::text('page[template]', $entity->getTemplate(), ['class' => 'form-control', 'placeholder' => $this->translate('If you need another template which is different from default one, you can define its name here')]); ?>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="bi bi-pencil"></i></span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="col-lg-2 control-label"><?php $this->show('Protect'); ?></label>
-                <div class="col-lg-10">
-                    <?php echo Element::checkbox('page[protected]', $entity->getProtected(), array('class' => 'form-control', 'title' => $this->translate('If you protect the page you are going to created, them users that use only simple mode will not be able to remove it'))); ?>
+            <div class="form-group row mb-3">
+                <label class="col-lg-2 col-form-label"><?= $this->translate('Protect'); ?></label>
+                <div class="col-lg-10 d-flex align-items-center">
+                    <div class="form-check">
+                        <?= Element::checkbox('page[protected]', $entity->getProtected(), ['class' => 'form-check-input', 'id' => 'page_protected', 'title' => $this->translate('If you protect the page you are going to created, them users that use only simple mode will not be able to remove it')]); ?>
+                        <label class="form-check-label" for="page_protected"><?= $this->translate('Protect from removal'); ?></label>
+                    </div>
                 </div>
             </div>
 
@@ -143,53 +165,67 @@ defined('KRYSTAL') or die;
             <?php endif; ?>
 
             <?php if (!$entity->getId()): ?>
-            <div class="form-group">
-                <label class="col-lg-2 control-label"><?php $this->show('Make default'); ?></label>
-                <div class="col-lg-10">
-                    <?php echo Element::checkbox('page[makeDefault]', $entity->getProtected(), array('class' => 'form-control', 'title' => $this->translate('Whether it should be home page or not'))); ?>
+            <div class="form-group row mb-3">
+                <label class="col-lg-2 col-form-label"><?= $this->translate('Make default'); ?></label>
+                <div class="col-lg-10 d-flex align-items-center">
+                    <div class="form-check">
+                        <?= Element::checkbox('page[makeDefault]', $entity->getProtected(), ['class' => 'form-check-input', 'id' => 'page_make_default', 'title' => $this->translate('Whether it should be home page or not')]); ?>
+                        <label class="form-check-label" for="page_make_default"><?= $this->translate('Use as home page'); ?></label>
+                    </div>
                 </div>
             </div>
             <?php endif; ?>
 
-            <div class="form-group">
-                <label class="col-lg-2 control-label"><?php $this->show('Enable SEO'); ?></label>
-                <div class="col-lg-10">
-                    <?php echo Element::checkbox('page[seo]', $entity->getSeo(), array('class' => 'form-control')); ?>
+            <div class="form-group row mb-3">
+                <label class="col-lg-2 col-form-label"><?= $this->translate('Enable SEO'); ?></label>
+                <div class="col-lg-10 d-flex align-items-center">
+                    <div class="form-check">
+                        <?= Element::checkbox('page[seo]', $entity->getSeo(), ['class' => 'form-check-input', 'id' => 'page_seo']); ?>
+                        <label class="form-check-label" for="page_seo"><?= $this->translate('Enable SEO optimization'); ?></label>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="col-lg-2 control-label"><?php $this->show('Image'); ?></label>
+            <div class="form-group row mb-3">
+                <label class="col-lg-2 col-form-label"><?= $this->translate('Image'); ?></label>
                 <div class="col-lg-10">
 
                     <?php if ($entity->hasImage()): ?>
-                    <p><img class="img-responsive" src="<?php echo $entity->getImageUrl('350x350'); ?>" /></p>
-                    <p>
-                        <label for="removeCover"><?php $this->show('Remove this cover'); ?>&nbsp;</label>
-                        <input type="checkbox" id="removeCover" name="page[remove_cover]" data-toggle="tooltip" data-placement="left" title="<?php $this->show('Check it if you want to remove this cover'); ?>" />
-                    </p>
+                    <div class="mb-3">
+                        <img class="img-fluid img-thumbnail" src="<?= $entity->getImageUrl('350x350'); ?>" />
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="removeCover" name="page[remove_cover]" />
+                        <label class="form-check-label" for="removeCover" data-toggle="tooltip" title="<?= $this->translate('Check it if you want to remove this cover'); ?>">
+                            <?= $this->translate('Remove this cover'); ?>
+                        </label>
+                    </div>
 
                     <?php else: ?>
-                    <p><img data-image="preview" /></p>
-
+                    <div class="mb-3">
+                        <img data-image="preview" class="img-fluid img-thumbnail d-none" />
+                    </div>
                     <?php endif; ?>
 
-                    <a class="btn btn-primary" data-button="upload" data-target="[name='file']" href="#"><i class="glyphicon glyphicon-picture"></i> <?php $this->show('Upload a file'); ?></a>
-                    <?php echo Element::file('file', 'image/x-png, image/gif, image/jpeg', array('class' => 'hidden', 'data-plugin' => 'preview')); ?>
+                    <a class="btn btn-primary" data-button="upload" data-target="[name='file']" href="#">
+                        <i class="bi bi-image"></i> <?= $this->translate('Upload a file'); ?>
+                    </a>
+                    <?= Element::file('file', 'image/x-png, image/gif, image/jpeg', ['class' => 'd-none', 'data-plugin' => 'preview']); ?>
                 </div>
             </div>
         </div>
 
         <?php $this->loadPartialIfPossible('block-content'); ?>
-	</div>
+    </div>
 
-    <?php $this->loadPartial('actions', array(
-        'new' => $new,
-        'add' => 'Pages:Admin:Page@addAction',
-        'edit' => 'Pages:Admin:Page@editAction',
-        'save' => 'Pages:Admin:Page@saveAction',
-        'cancel' => 'Pages:Admin:Browser@indexAction',
-        'options' => true
-    )); ?>
-
+    <div class="card-footer">
+        <?php $this->loadPartial('actions', [
+            'new' => $new,
+            'add' => 'Pages:Admin:Page@addAction',
+            'edit' => 'Pages:Admin:Page@editAction',
+            'save' => 'Pages:Admin:Page@saveAction',
+            'cancel' => 'Pages:Admin:Browser@indexAction',
+            'options' => true
+        ]); ?>
+    </div>
 </form>

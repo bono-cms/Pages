@@ -9,93 +9,91 @@ defined('KRYSTAL') or die;
 ?>
 
 <form autocomplete="off">
-    <div class="btn-toolbar">
+    <div class="btn-toolbar mb-3">
         <div class="btn-group mr-2">
-            <?php $this->loadPartial('menu', array(
-                'items' => array(
+            <?php $this->loadPartial('menu', [
+                'items' => [
                     'Pages:Admin:Page@addAction' => 'Add new page',
-                ),
-                'actions' => array(
+                ],
+                'actions' => [
                     'data' => $pages,
                     'save' => 'Pages:Admin:Page@tweakAction',
                     'delete' => 'Pages:Admin:Page@deleteAction'
-                )
-            )); ?>
+                ]
+            ]); ?>
         </div>
 
         <?php if ($filterApplied): ?>
         <div class="btn-group mr-2">
-            <a href="<?php echo $this->url('Pages:Admin:Page@indexAction'); ?>" class="btn btn-primary"><i class="glyphicon glyphicon-trash"></i> <?php $this->show('Reset filter'); ?></a>
+            <a href="<?= $this->url('Pages:Admin:Page@indexAction'); ?>" class="btn btn-primary">
+                <i class="bi bi-trash"></i> <?= $this->translate('Reset filter'); ?>
+            </a>
         </div>
         <?php endif; ?>
 
         <div class="btn-group mr-2">
-            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> <?php $this->show('Filter'); ?></button>
+            <button class="btn btn-primary" type="submit">
+                <i class="bi bi-search"></i> <?= $this->translate('Filter'); ?>
+            </button>
         </div>
     </div>
 
     <div class="card">
         <div class="card-header">
-            <?php $this->loadPartial('items-per-page', array('caption' => 'Pages')); ?>
+            <?php $this->loadPartial('items-per-page', ['caption' => $this->translate('Pages')]); ?>
         </div>
 
         <div class="table-responsive">
-            <?= $this->widget(new GridViewWidget($pages, array(
+            <?= $this->widget(new GridViewWidget($pages, [
                 'pk' => 'id',
                 'batch' => true,
-                'tableClass' => 'table table-hover table-bordered table-striped table-sm',
-                'columns' => array(
-                    array(
+                'tableClass' => 'table table-hover table-bordered table-striped table-sm mb-0',
+                'columns' => [
+                    [
                         'column' => 'id',
                         'label' => '#',
-                        'attributes' => array(
+                        'attributes' => [
                             'class' => 'text-center text-muted'
-                        )
-                    ),
-
-                    array(
+                        ]
+                    ],
+                    [
                         'column' => 'name',
                         'type' => 'text',
-                        'attributes' => array(
+                        'attributes' => [
                             'class' => null
-                        ),
+                        ],
                         'filter' => true
-                    ),
-
-                    array(
+                    ],
+                    [
                         'column' => 'seo',
-                        'label' => 'SEO',
+                        'label' => $this->translate('SEO'),
                         'type' => 'select',
                         'value' => function($row){
-                            return Element::checkbox(sprintf('seo[%s]', $row['id']), $row['seo']);
+                            return Element::checkbox(sprintf('seo[%s]', $row['id']), $row['seo'], ['class' => 'form-check-input']);
                         },
                         'filter' => $this->translateArray([
                             '0' => 'No',
                             '1' => 'Yes'
                         ])
-                    ),
-
-                    array(
+                    ],
+                    [
                         'column' => 'default',
                         'value' => function($page){
-                            return Element::radio('default', $page->getId(), $page->isDefault());
+                            return Element::radio('default', $page->getId(), $page->isDefault(), ['class' => 'form-check-input']);
                         }
-                    )
-                ),
-
-                'actions' => array(
-                    'view' => function($page){
+                    ]
+                ],
+                'actions' => [
+                    function($page){
                         return Icon::view($page->getUrl(), $this->translate('View this page on site'));
                     },
-
-                    'edit' => function($page){
+                    function($page){
                         return Icon::edit(
                             $this->url('Pages:Admin:Page@editAction', $page->getId()),
                             $this->translate('Edit this page')
                         );
                     },
-
-                    'remove' => function($page) use ($extendedMode){
+                    function($page) use ($extendedMode){
                         if ($extendedMode || !($page->isDefault() || $page->getProtected())) {
                             return Icon::remove(
                                 $this->url('Pages:Admin:Page@deleteAction', $page->getId()), 
@@ -105,20 +103,20 @@ defined('KRYSTAL') or die;
                             return null;
                         }
                     }
-                )
-
-            ))); ?>
-
-            <br />
+                ]
+            ])); ?>
 
             <?php if (empty($pages)): ?>
-            <div class="center-block">
-                <h2 class="text-center text-muted"><i class="glyphicon glyphicon-remove"></i> <?php $this->show('No pages'); ?></h2>
+            <div class="card-body text-center">
+                <h2 class="text-muted">
+                    <i class="bi bi-x-circle"></i> <?= $this->translate('No pages'); ?>
+                </h2>
             </div>
             <?php endif; ?>
         </div>
 
-        <?php $this->loadPartial('paginator'); ?>
+        <div class="card-footer">
+            <?php $this->loadPartial('paginator'); ?>
+        </div>
     </div>
 </form>
-
