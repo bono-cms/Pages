@@ -11,8 +11,8 @@
 
 namespace Pages\Controller\Admin;
 
-use Krystal\Validate\Pattern;
 use Krystal\Stdlib\VirtualEntity;
+use Krystal\Validation\Validator;
 use Pages\Service\PageEntity;
 use Cms\Controller\Admin\AbstractController;
 use Pages\Service\ControllerProvider;
@@ -181,18 +181,15 @@ final class Page extends AbstractController
      */
     public function saveAction()
     {
-        $input = $this->request->getPost('page');
+        $validator = new Validator($this->request->getPost());
+        $validator->setTranslator($this->translator, $this->appConfig->getLanguage());
 
-        $formValidator = $this->createValidator(array(
-            'input' => array(
-                'source' => $input,
-                'definition' => array(
-                    'name' => new Pattern\Name()
-                )
-            )
-        ));
+        $validator->field('translation.*.name', 'Page name')
+                  ->required()
+                  ->addRule('minlength', null, ['min' => 5]);
 
-        if (1) {
+        if ($validator->isPassed()) {
+            $input = $this->request->getPost('page');
             $service = $this->getModuleService('pageManager');
             $historyService = $this->getService('Cms', 'historyManager');
 
@@ -225,7 +222,9 @@ final class Page extends AbstractController
             }
 
         } else {
-            return $formValidator->getErrors();
+            return $this->json([
+                'errors' => $validator->getErrors()
+            ]);
         }
     }
 }
