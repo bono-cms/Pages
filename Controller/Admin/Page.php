@@ -34,7 +34,7 @@ final class Page extends AbstractController
         $id = !$new ? $page[0]->getId() : $page->getId();
 
         // Load view plugins
-        $this->view->getPluginBag()->load(array('preview', $this->getWysiwygPluginName()))
+        $this->view->getPluginBag()->load(['preview', $this->getWysiwygPluginName()])
                                    ->appendScript('@Pages/admin/page.form.js');
 
         // Append breadcrumbs
@@ -46,11 +46,11 @@ final class Page extends AbstractController
         // Load fields, if possible
         $this->loadFields($id);
 
-        return $this->view->render('page.form', array(
+        return $this->view->render('page.form', [
             'controllers' => $provider->getControllers(),
             'page' => $page,
             'new' => $new
-        ));
+        ]);
     }
 
     /**
@@ -67,11 +67,11 @@ final class Page extends AbstractController
         $service = $this->getModuleService('pageManager');
         $pages = $this->getFilter($service);
 
-        return $this->view->render('index', array(
+        return $this->view->render('index', [
             'paginator' => $service->getPaginator(),
             'pages' => $pages,
             'filterApplied' => $this->request->getQuery('filter', false)
-        ));
+        ]);
     }
 
     /**
@@ -147,7 +147,9 @@ final class Page extends AbstractController
             $historyService->write('Pages', 'The page "%s" has been removed', $page->getName());
         }
 
-        return '1';
+        return $this->json([
+            'refresh' => true
+        ]);
     }
 
     /**
@@ -169,9 +171,12 @@ final class Page extends AbstractController
 
             if ($pageManager->updateSeo($seo)) {
                 $this->flashBag->set('success', 'Settings have been saved successfully');
-                return '1';
             }
         }
+
+        return $this->json([
+            'refresh' => true
+        ]);
     }
 
     /**
@@ -186,7 +191,7 @@ final class Page extends AbstractController
 
         $validator->field('translation.*.name', 'Page name')
                   ->required()
-                  ->addRule('minlength', null, ['min' => 5]);
+                  ->addRule('minlength', null, ['min' => 3]);
 
         if ($validator->isPassed()) {
             $input = $this->request->getPost('page');
@@ -204,7 +209,10 @@ final class Page extends AbstractController
                     $this->updateFields('page');
 
                     $historyService->write('Pages', 'The page "%s" has been updated', $name);
-                    return '1';
+
+                    return $this->json([
+                        'refresh' => true
+                    ]);
                 }
 
             } else {
@@ -217,7 +225,9 @@ final class Page extends AbstractController
                     // Insert dynamic fields, if present
                     $this->insertFields('page', $lastId);
 
-                    return $lastId;
+                    return $this->json([
+                        'redirect' => $this->createUrl('Pages:Admin:Page@editAction', [$lastId]),
+                    ]);
                 }
             }
 

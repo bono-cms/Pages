@@ -17,6 +17,10 @@ use Site\Controller\AbstractController;
 
 final class Page extends AbstractController
 {
+    const TEMPLATE_DEFAULT = 'pages-page';
+    const TEMPLATE_404 = 'pages-404';
+    const TEMPLATE_HOME = 'pages-home';
+
     /**
      * Renders a page by its associated id
      * 
@@ -49,10 +53,10 @@ final class Page extends AbstractController
             // Append fields on demand
             $this->appendFieldsIfPossible($page);
 
-            return $this->view->render($page->hasTemplate() ? $page->getTemplate() : 'pages-page', array(
+            return $this->view->render($page->hasTemplate() ? $page->getTemplate() : self::TEMPLATE_DEFAULT, [
                 'page' => $page,
                 'languages' => $this->getPageManager()->getSwitchUrls($id)
-            ));
+            ]);
 
         } else {
             // Returning false from controller's action triggers 404 error automatically
@@ -78,10 +82,10 @@ final class Page extends AbstractController
              ->setSeo(false);
 
         // There's no need to set 404 status code here, as its handled by the router internally
-        return $this->view->render('pages-404', array(
+        return $this->view->render(self::TEMPLATE_404, [
             'page' => $page,
             'languages' => $this->getService('Cms', 'languageManager')->fetchAll(true)
-        ));
+        ]);
     }
 
     /**
@@ -102,10 +106,10 @@ final class Page extends AbstractController
             // Append fields if possible
             $this->appendFieldsIfPossible($page);
 
-            return $this->view->render('pages-home', array(
+            return $this->view->render(TEMPLATE_HOME, [
                 'page' => $page,
                 'languages' => $this->getService('Cms', 'languageManager')->fetchAll(true)
-            ));
+            ]);
 
         } else {
             // Returning false from a controller's action triggers 404 error automatically
