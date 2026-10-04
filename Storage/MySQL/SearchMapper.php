@@ -3,8 +3,6 @@
 /**
  * This file is part of the Bono CMS
  * 
- * Copyright (c) No Global State Lab
- * 
  * For the full copyright and license information, please view
  * the license file that was distributed with this source code.
  */
@@ -22,22 +20,22 @@ final class SearchMapper extends AbstractMapper
     public function appendQuery(QueryBuilderInterface $queryBuilder, $placeholder)
     {
         // Columns to be selected
-        $columns = array(
+        $columns = [
             PageMapper::column('id'),
             PageTranslationMapper::column('web_page_id'),
             PageTranslationMapper::column('lang_id'),
             PageTranslationMapper::column('title'),
             PageTranslationMapper::column('content'),
             PageTranslationMapper::column('name')
-        );
+        ];
 
         $queryBuilder->select($columns)
                      ->from(PageMapper::getTableName())
                      // Translation relation
-                     ->innerJoin(PageTranslationMapper::getTableName(), array(
+                     ->innerJoin(PageTranslationMapper::getTableName(), [
                         PageMapper::column('id') => PageTranslationMapper::column('id'),
                         PageTranslationMapper::column('lang_id') => $this->getLangId()
-                     ))
+                     ])
                      // Filtering conditions
                      ->whereEquals(PageMapper::column('seo'), '1')
                      ->andWhereEquals(PageTranslationMapper::column('lang_id'), "'{$this->getLangId()}'")

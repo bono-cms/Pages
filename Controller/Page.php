@@ -3,8 +3,6 @@
 /**
  * This file is part of the Bono CMS
  * 
- * Copyright (c) No Global State Lab
- * 
  * For the full copyright and license information, please view
  * the license file that was distributed with this source code.
  */
@@ -12,7 +10,6 @@
 namespace Pages\Controller;
 
 use Krystal\Stdlib\VirtualEntity;
-use Krystal\Validate\Pattern;
 use Site\Controller\AbstractController;
 
 final class Page extends AbstractController
@@ -106,7 +103,7 @@ final class Page extends AbstractController
             // Append fields if possible
             $this->appendFieldsIfPossible($page);
 
-            return $this->view->render(TEMPLATE_HOME, [
+            return $this->view->render(self::TEMPLATE_HOME, [
                 'page' => $page,
                 'languages' => $this->getService('Cms', 'languageManager')->fetchAll(true)
             ]);

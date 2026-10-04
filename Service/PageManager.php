@@ -3,8 +3,6 @@
 /**
  * This file is part of the Bono CMS
  * 
- * Copyright (c) No Global State Lab
- * 
  * For the full copyright and license information, please view
  * the license file that was distributed with this source code.
  */
@@ -14,7 +12,6 @@ namespace Pages\Service;
 use Cms\Service\AbstractManager;
 use Cms\Service\WebPageManagerInterface;
 use Pages\Storage\PageMapperInterface;
-use Pages\Storage\DefaultMapperInterface;
 use Krystal\Stdlib\ArrayUtils;
 use Krystal\Db\Filter\FilterableServiceInterface;
 use Krystal\Image\Tool\ImageManagerInterface;
@@ -84,7 +81,7 @@ final class PageManager extends AbstractManager implements FilterableServiceInte
      * @param array $parameters
      * @return array
      */
-    public function filter($input, $page, $itemsPerPage, $sortingColumn, $desc, array $parameters = array())
+    public function filter($input, $page, $itemsPerPage, $sortingColumn, $desc, array $parameters = [])
     {
         return $this->prepareResults($this->pageMapper->filter($input, $page, $itemsPerPage, $sortingColumn, $desc, $parameters));
     }
@@ -247,7 +244,7 @@ final class PageManager extends AbstractManager implements FilterableServiceInte
         $controller = isset($data['page']['controller']) ? $data['page']['controller'] : 'Pages:Page@indexAction';
 
         // Keep only page related attributes
-        $data['page'] = ArrayUtils::arrayWithout($data['page'], array('controller', 'makeDefault', 'menu', 'remove_cover'));
+        $data['page'] = ArrayUtils::arrayWithout($data['page'], ['controller', 'makeDefault', 'menu', 'remove_cover']);
 
         return $this->pageMapper->savePage('Pages', $controller, $data['page'], $data['translation']);
     }

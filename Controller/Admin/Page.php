@@ -3,8 +3,6 @@
 /**
  * This file is part of the Bono CMS
  * 
- * Copyright (c) No Global State Lab
- * 
  * For the full copyright and license information, please view
  * the license file that was distributed with this source code.
  */
@@ -12,7 +10,6 @@
 namespace Pages\Controller\Admin;
 
 use Krystal\Stdlib\VirtualEntity;
-use Krystal\Validation\Validator;
 use Pages\Service\PageEntity;
 use Cms\Controller\Admin\AbstractController;
 use Pages\Service\ControllerProvider;
@@ -186,10 +183,9 @@ final class Page extends AbstractController
      */
     public function saveAction()
     {
-        $validator = new Validator($this->request->getPost());
-        $validator->setTranslator($this->translator, $this->appConfig->getLanguage());
+        $validator = $this->createValidation();
 
-        $validator->field('translation.*.name', 'Page name')
+        $validator->field('translation.*.name')
                   ->required()
                   ->addRule('minlength', null, ['min' => 3]);
 

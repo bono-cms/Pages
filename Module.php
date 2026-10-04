@@ -3,8 +3,6 @@
 /**
  * This file is part of the Bono CMS
  * 
- * Copyright (c) No Global State Lab
- * 
  * For the full copyright and license information, please view
  * the license file that was distributed with this source code.
  */
@@ -24,18 +22,18 @@ final class Module extends AbstractCmsModule
      */
     private function createImageManager()
     {
-        $plugins = array(
-            'thumb' => array(
-                'dimensions' => array(
+        $plugins = [
+            'thumb' => [
+                'dimensions' => [
                     // Administration area
-                    array(350, 350)
-                )
-            ),
+                    [350, 350]
+                ]
+            ],
 
-            'original' => array(
+            'original' => [
                 'prefix' => 'original'
-            )
-        );
+            ]
+        ];
 
         return new ImageManager(
             '/data/uploads/module/pages',
@@ -52,9 +50,9 @@ final class Module extends AbstractCmsModule
     {
         $pageMapper = $this->getMapper('/Pages/Storage/MySQL/PageMapper');
 
-        return array(
+        return [
             'pageManager' => new PageManager($pageMapper, $this->getWebPageManager(), $this->createImageManager()),
             'blockFieldService' => $this->createFieldService('\Pages\Storage\MySQL\PageExtraFieldMapper')
-        );
+        ];
     }
 }

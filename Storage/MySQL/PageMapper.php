@@ -3,8 +3,6 @@
 /**
  * This file is part of the Bono CMS
  * 
- * Copyright (c) No Global State Lab
- * 
  * For the full copyright and license information, please view
  * the license file that was distributed with this source code.
  */
@@ -42,7 +40,7 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
      */
     private function getColumns()
     {
-        return array(
+        return [
             self::column('id'),
             self::column('template'),
             self::column('protected'),
@@ -62,7 +60,7 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
             WebPageMapper::column('changefreq'),
             WebPageMapper::column('priority'),
             WebPageMapper::column('controller')
-        );
+        ];
     }
 
     /**
@@ -74,9 +72,9 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
     public function updateDefault($id)
     {
         // Data to be updated
-        $data = array(
+        $data = [
             'default' => new RawSqlFragment('CASE WHEN id = '.$id.' THEN 1 ELSE 0 END')
-        );
+        ];
 
         return $this->db->update(self::getTableName(), $data)
                         ->execute();
@@ -106,10 +104,10 @@ final class PageMapper extends AbstractMapper implements PageMapperInterface, We
      */
     public function filter($input, $page, $itemsPerPage, $sortingColumn, $desc)
     {
-        $sortingColumns = array(
+        $sortingColumns = [
             'seo' => self::column('seo'),
             'name' => PageTranslationMapper::column('name')
-        );
+        ];
 
         // Current sorting column
         $sortingColumn = isset($sortingColumns[$sortingColumn]) ? $sortingColumns[$sortingColumn] : self::column($this->getPk());

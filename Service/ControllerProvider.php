@@ -3,8 +3,6 @@
 /**
  * This file is part of the Bono CMS
  * 
- * Copyright (c) No Global State Lab
- * 
  * For the full copyright and license information, please view
  * the license file that was distributed with this source code.
  */
@@ -20,18 +18,18 @@ final class ControllerProvider
      * 
      * @var array
      */
-    private $routes = array();
+    private $routes = [];
 
     /**
      * Excluded modules
      * 
      * @var array
      */
-    private $excluded = array(
+    private $excluded = [
         'Admin', 
         'Cms', 
         'Site'
-    );
+    ];
 
     /**
      * State initialization
@@ -52,7 +50,7 @@ final class ControllerProvider
     public function getControllers()
     {
         $mapManager = new MapManager($this->routes);
-        $result = array();
+        $result = [];
 
         foreach ($mapManager->getControllers() as $controller) {
             // Add only non-excluded controller
