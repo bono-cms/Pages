@@ -4,13 +4,11 @@ use Krystal\Form\Element;
 use Krystal\Widget\GridView\GridViewWidget;
 use Cms\View\Icon;
 
-defined('KRYSTAL') or die;
-
 ?>
 
 <form autocomplete="off">
     <div class="btn-toolbar mb-3">
-        <div class="btn-group mr-2">
+        <div class="btn-group me-2">
             <?php $this->loadPartial('menu', [
                 'items' => [
                     'Pages:Admin:Page@addAction' => 'Add new page',
@@ -24,16 +22,16 @@ defined('KRYSTAL') or die;
         </div>
 
         <?php if ($filterApplied): ?>
-        <div class="btn-group mr-2">
-            <a href="<?= $this->url('Pages:Admin:Page@indexAction'); ?>" class="btn btn-primary">
-                <i class="bi bi-trash"></i> <?= $this->translate('Reset filter'); ?>
+        <div class="btn-group me-2">
+            <a href="<?= $this->url('Pages:Admin:Page@indexAction') ?>" class="btn btn-primary">
+                <i class="bi bi-trash"></i> <?= $this->translate('Reset filter') ?>
             </a>
         </div>
         <?php endif; ?>
 
-        <div class="btn-group mr-2">
+        <div class="btn-group me-2">
             <button class="btn btn-primary" type="submit">
-                <i class="bi bi-search"></i> <?= $this->translate('Filter'); ?>
+                <i class="bi bi-search"></i> <?= $this->translate('Filter') ?>
             </button>
         </div>
     </div>
@@ -47,7 +45,7 @@ defined('KRYSTAL') or die;
             <?= $this->widget(new GridViewWidget($pages, [
                 'pk' => 'id',
                 'batch' => true,
-                'tableClass' => 'table table-hover table-bordered table-striped table-sm mb-0',
+                'tableClass' => 'table table-hover table-bordered table-striped table-sm mb-0 align-middle',
                 'columns' => [
                     [
                         'column' => 'id',
@@ -68,7 +66,7 @@ defined('KRYSTAL') or die;
                         'column' => 'seo',
                         'label' => $this->translate('SEO'),
                         'type' => 'select',
-                        'value' => function($row){
+                        'value' => function ($row) {
                             return Element::checkbox(sprintf('seo[%s]', $row['id']), $row['seo'], ['class' => 'form-check-input']);
                         },
                         'filter' => $this->translateArray([
@@ -78,25 +76,25 @@ defined('KRYSTAL') or die;
                     ],
                     [
                         'column' => 'default',
-                        'value' => function($page){
+                        'value' => function ($page) {
                             return Element::radio('default', $page->getId(), $page->isDefault(), ['class' => 'form-check-input']);
                         }
                     ]
                 ],
                 'actions' => [
-                    function($page){
+                    function ($page) {
                         return Icon::view($page->getUrl(), $this->translate('View this page on site'));
                     },
-                    function($page){
+                    function ($page) {
                         return Icon::edit(
                             $this->url('Pages:Admin:Page@editAction', $page->getId()),
                             $this->translate('Edit this page')
                         );
                     },
-                    function($page) use ($extendedMode){
+                    function ($page) use ($extendedMode) {
                         if ($extendedMode || !($page->isDefault() || $page->getProtected())) {
                             return Icon::remove(
-                                $this->url('Pages:Admin:Page@deleteAction', $page->getId()), 
+                                $this->url('Pages:Admin:Page@deleteAction', $page->getId()),
                                 $this->translate('Remove this page')
                             );
                         } else {
@@ -109,7 +107,7 @@ defined('KRYSTAL') or die;
             <?php if (empty($pages)): ?>
             <div class="card-body text-center">
                 <h2 class="text-muted">
-                    <i class="bi bi-x-circle"></i> <?= $this->translate('No pages'); ?>
+                    <i class="bi bi-x-circle"></i> <?= $this->translate('No pages') ?>
                 </h2>
             </div>
             <?php endif; ?>
